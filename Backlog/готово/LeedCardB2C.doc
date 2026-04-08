@@ -1,0 +1,552 @@
+﻿<html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:w="urn:schemas-microsoft-com:office:word" xmlns="http://www.w3.org/TR/REC-html40">
+<head>
+<meta charset="UTF-8">
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<!--[if gte mso 9]>
+<xml>
+<w:WordDocument>
+<w:View>Print</w:View>
+<w:Zoom>100</w:Zoom>
+</w:WordDocument>
+</xml>
+<![endif]-->
+<style>
+body {
+    font-family: 'Calibri', 'Arial', sans-serif;
+    font-size: 11pt;
+    line-height: 1.3;
+    color: #333;
+    margin: 0;
+    padding: 0;
+}
+h1 { font-size: 16pt; font-weight: 700; color: #000000; margin: 12pt 0 4pt 0; line-height: 1.15; }
+h2 { font-size: 13pt; font-weight: 600; color: #000000; margin: 12pt 0 4pt 0; line-height: 1.15; }
+h3 { font-size: 12pt; font-weight: 600; color: #333333; margin: 12pt 0 4pt 0; line-height: 1.15; }
+h4 { font-size: 11pt; font-weight: 600; color: #333333; margin: 8pt 0 4pt 0; }
+h5 { font-size: 11pt; font-weight: 600; color: #666666; margin: 8pt 0 4pt 0; }
+h6 { font-size: 11pt; font-weight: 600; color: #666666; margin: 8pt 0 4pt 0; }
+p { margin: 0 0 8pt 0; line-height: 1.45; }
+a { color: #0563C1; text-decoration: underline; }
+
+ul { list-style-type: disc; padding-left: 36pt; margin: 4pt 0; }
+ol { list-style-type: decimal; padding-left: 36pt; margin: 4pt 0; }
+li { margin-bottom: 2pt; line-height: 1.3; }
+ul ul { list-style-type: circle; }
+ul ul ul { list-style-type: square; }
+
+code {
+    font-family: 'Consolas', 'Courier New', monospace;
+    font-size: 10pt;
+    background-color: #f5f5f5;
+    padding: 1pt 4pt;
+    border: 1px solid #e0e0e0;
+}
+pre {
+    font-family: 'Consolas', 'Courier New', monospace;
+    font-size: 10pt;
+    background-color: #f5f5f5;
+    padding: 10pt;
+    border: 1px solid #e0e0e0;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+    margin: 8pt 0;
+}
+pre code { background: none; border: none; padding: 0; }
+
+blockquote {
+    border-left: 3pt solid #cccccc;
+    padding: 8pt 12pt;
+    margin: 8pt 0;
+    font-style: italic;
+    color: #595959;
+    background-color: #f8f9fa;
+}
+
+table { border-collapse: collapse; width: 100%; margin: 8pt 0; border: 1px solid #cccccc; }
+th {
+    background-color: #f0f0f0;
+    color: #333333;
+    font-weight: 600;
+    padding: 8px 12px;
+    text-align: left;
+    border: 1px solid #cccccc;
+}
+td { padding: 8px 12px; border: 1px solid #cccccc; }
+
+hr { border: none; border-top: 1px solid #bfbfbf; margin: 12pt 0; }
+img { max-width: 100%; height: auto; }
+.katex-inline-image { vertical-align: -0.08em; }
+.katex-block-image { display: block; margin: 8pt auto; }
+strong { font-weight: bold; }
+em { font-style: italic; }
+del { text-decoration: line-through; }
+mark { background-color: #FFFF00; }
+</style>
+</head>
+<body>
+<h1 id="техническое-задание-модуль-«crm-лиды-b2c»-online-shop--telesales">Техническое задание: Модуль «CRM Лиды B2C» (Online Shop &amp; Telesales)</h1>
+<p><strong>Система:</strong> SapaCRM</p>
+<p><strong>Версия:</strong> 3.0 (Stage-Driven Architecture &amp; SLA Tracking)</p>
+<p><strong>Область применения:</strong> B2C продажи (Физические лица)</p>
+<hr>
+<h2 id="1-общая-информация-и-цели">1. Общая информация и цели</h2>
+<p>Модуль предназначен для автоматизации полного цикла B2C-продаж через онлайн-каналы (kcell.kz, activ.kz) и телемаркетинг.</p>
+<p>Ключевые цели модуля:</p>
+<ul>
+<li>Ускорение обработки входящих заявок за счет алгоритма автоматического распределения Round Robin.</li>
+<li>Жесткий контроль времени реакции операторов (SLA Watchdog) для сбора метрик производительности.</li>
+<li>Обеспечение юридической чистоты сделок через интеграцию биометрической проверки и подписания документов с помощью облачной ЭЦП.</li>
+<li>Изоляция чувствительных персональных данных физических лиц (доходы, пароли) от B2B-сущностей.</li>
+</ul>
+<hr>
+<h2 id="2-архитектура-данных">2. Архитектура данных</h2>
+<p>Сущность физического лица нормализована и разделена на две таблицы:</p>
+<ol>
+<li><strong><code>client.clients</code></strong> : Базовая таблица (уже существует в БД). Выступает единой точкой входа, хранит общие идентификаторы (ИИН), настройки языка и резидентство.</li>
+<li><strong><code>client.clients_b2c</code></strong> : Новая детализирующая таблица. Хранит персональные данные физического лица (ФИО, контакты) и финансовые метрики (доходы). Связана с базовой таблицей отношением 1:1.</li>
+</ol>
+<p>Для управления процессом продаж создается новая таблица  <strong><code>client.leads_b2c</code></strong> , где фиксируются движение по этапам воронки, тайминги SLA и статусы верификации.</p>
+<hr>
+<h2 id="3-ролевая-модель-и-контроль-sla">3. Ролевая модель и контроль SLA</h2>
+<ul>
+<li><strong>Алгоритм распределения (Round Robin):</strong> Входящие лиды автоматически распределяются поровну между операторами, находящимися в статусе «Готов».</li>
+<li><strong>SLA Watchdog (Контроль времени):</strong> При назначении лида на оператора система фиксирует точное время в поле <code>assigned_at</code>. Если лид не переведен в работу в течение 15 минут, система автоматически устанавливает флаг <code>is_sla_breached = true</code> и отправляет WebSocket-уведомление (Алерт) Супервайзеру.</li>
+<li><strong>Аналитика:</strong> Поле <code>assigned_at</code> используется для построения исторических отчетов (Time to First Action, расчет нагрузки на смену).</li>
+</ul>
+<hr>
+<h2 id="4-маппинг-полей-по-этапам-воронки-продаж">4. Маппинг полей по этапам воронки продаж</h2>
+<p>Данные заполняются итеративно. Переход на следующий этап возможен только при выполнении условий (Hard Stops).</p>
+<h3 id="сквозные-системные-поля-metadata">Сквозные системные поля (Metadata)</h3>
+<p>Генерируются при поступлении лида (через API или вручную). Отображаются в верхней панели карточки (Header).</p>
+<table>
+<thead>
+<tr>
+<th><strong>Поле в UI</strong></th>
+<th><strong>Источник / Логика</strong></th>
+<th><strong>Таблица в БД</strong></th>
+<th><strong>Поле в БД</strong></th>
+<th><strong>Тип</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td>ID лида</td>
+<td>System Auto</td>
+<td><code>client.leads_b2c</code></td>
+<td><code>id</code></td>
+<td><code>bigint</code></td>
+</tr>
+<tr>
+<td>Номер лида</td>
+<td>System (генерация)</td>
+<td><code>client.leads_b2c</code></td>
+<td><code>lead_number</code></td>
+<td><code>varchar(50)</code></td>
+</tr>
+<tr>
+<td>Канал поступления</td>
+<td>API / Manual</td>
+<td><code>client.leads_b2c</code></td>
+<td><code>source_id</code></td>
+<td><code>bigint</code></td>
+</tr>
+<tr>
+<td>Ответственный (Оператор)</td>
+<td>Auto (Round Robin)</td>
+<td><code>client.leads_b2c</code></td>
+<td><code>operator_id</code></td>
+<td><code>bigint</code></td>
+</tr>
+<tr>
+<td>Время назначения</td>
+<td>System Auto</td>
+<td><code>client.leads_b2c</code></td>
+<td><code>assigned_at</code></td>
+<td><code>timestamp</code></td>
+</tr>
+<tr>
+<td>Watchdog SLA</td>
+<td>SLA &gt; 15 мин от <code>assigned_at</code></td>
+<td><code>client.leads_b2c</code></td>
+<td><code>is_sla_breached</code></td>
+<td><code>boolean</code></td>
+</tr>
+</tbody></table>
+<hr>
+<h3 id="этап-1-acquaintance-знакомство-и-профиль">Этап 1: ACQUAINTANCE (Знакомство и Профиль)</h3>
+<p><strong>Цель:</strong> Первичная идентификация клиента, создание или обновление профиля в БД.</p>
+<table>
+<thead>
+<tr>
+<th><strong>Поле в UI</strong></th>
+<th><strong>Обяз.</strong></th>
+<th><strong>Источник / Логика</strong></th>
+<th><strong>Таблица в БД</strong></th>
+<th><strong>Поле в БД</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td>ИИН</td>
+<td>Да</td>
+<td>User Input (Unique)</td>
+<td><code>client.clients</code></td>
+<td><code>bin_iin</code></td>
+</tr>
+<tr>
+<td>Язык обслуживания</td>
+<td>Да</td>
+<td>Manual (Справочник)</td>
+<td><code>client.clients</code></td>
+<td><code>language_id</code></td>
+</tr>
+<tr>
+<td>Резидентство</td>
+<td>Да</td>
+<td>Manual (Флаг)</td>
+<td><code>client.clients</code></td>
+<td><code>residency_id</code></td>
+</tr>
+<tr>
+<td>Фамилия</td>
+<td>Да</td>
+<td>Manual</td>
+<td><code>client.clients_b2c</code></td>
+<td><code>last_name</code></td>
+</tr>
+<tr>
+<td>Имя</td>
+<td>Да</td>
+<td>Manual</td>
+<td><code>client.clients_b2c</code></td>
+<td><code>first_name</code></td>
+</tr>
+<tr>
+<td>Телефон</td>
+<td>Да</td>
+<td>Manual</td>
+<td><code>client.clients_b2c</code></td>
+<td><code>phone</code></td>
+</tr>
+<tr>
+<td>Email</td>
+<td>Нет</td>
+<td>Manual</td>
+<td><code>client.clients_b2c</code></td>
+<td><code>email</code></td>
+</tr>
+</tbody></table>
+<hr>
+<h3 id="этап-2-needs-выявление-потребности-и-корзина">Этап 2: NEEDS (Выявление потребности и Корзина)</h3>
+<p><strong>Цель:</strong> Выбор продуктов, тарифов или оборудования. Формирование корзины заказа.</p>
+<table>
+<thead>
+<tr>
+<th><strong>Поле в UI</strong></th>
+<th><strong>Обяз.</strong></th>
+<th><strong>Источник / Логика</strong></th>
+<th><strong>Таблица в БД</strong></th>
+<th><strong>Поле в БД</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Продукт / Тариф</td>
+<td>Да</td>
+<td>Manual (Справочник)</td>
+<td><code>client.lead_items</code></td>
+<td><code>product_id</code></td>
+</tr>
+<tr>
+<td>Тип продукта</td>
+<td>Да</td>
+<td>Auto (Оборудование/Услуга)</td>
+<td><code>client.lead_items</code></td>
+<td><code>item_type</code></td>
+</tr>
+<tr>
+<td>Количество</td>
+<td>Да</td>
+<td>Manual (Число &gt; 0)</td>
+<td><code>client.lead_items</code></td>
+<td><code>quantity</code></td>
+</tr>
+<tr>
+<td>Цена за ед.</td>
+<td>Да</td>
+<td>Auto (Прайс-лист)</td>
+<td><code>client.lead_items</code></td>
+<td><code>unit_price</code></td>
+</tr>
+</tbody></table>
+<hr>
+<h3 id="этап-3-verification-верификация-и-скоринг">Этап 3: VERIFICATION (Верификация и Скоринг)</h3>
+<p><strong>Цель:</strong> Юридическая и финансовая проверка.</p>
+<p><strong>Триггер перехода (Hard Stop):</strong> Успешный статус биометрии и подписание ЭЦП (для контрактов).</p>
+<table>
+<thead>
+<tr>
+<th><strong>Поле в UI</strong></th>
+<th><strong>Обяз.</strong></th>
+<th><strong>Источник / Логика</strong></th>
+<th><strong>Таблица в БД</strong></th>
+<th><strong>Поле в БД</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Сумма дохода</td>
+<td>*</td>
+<td>Обязательно для рассрочки</td>
+<td><code>client.clients_b2c</code></td>
+<td><code>income_amount</code></td>
+</tr>
+<tr>
+<td>Источник дохода</td>
+<td>*</td>
+<td>Обязательно для рассрочки</td>
+<td><code>client.clients_b2c</code></td>
+<td><code>income_source_id</code></td>
+</tr>
+<tr>
+<td>Семейное положение</td>
+<td>*</td>
+<td>Обязательно для рассрочки</td>
+<td><code>client.clients_b2c</code></td>
+<td><code>marital_status_id</code></td>
+</tr>
+<tr>
+<td>Статус Биометрии</td>
+<td>Да</td>
+<td>Auto (Интеграция с вендором)</td>
+<td><code>client.leads_b2c</code></td>
+<td><code>biometric_status_id</code></td>
+</tr>
+<tr>
+<td>Облачная ЭЦП</td>
+<td>Да</td>
+<td>Auto (Интеграция с eGov/вендором)</td>
+<td><code>client.leads_b2c</code></td>
+<td><code>cloud_sign_status_id</code></td>
+</tr>
+</tbody></table>
+<hr>
+<h3 id="этап-4-sale--closed-логистика-оплата-и-финал">Этап 4: SALE &amp; CLOSED (Логистика, Оплата и Финал)</h3>
+<p><strong>Цель:</strong> Оформление доставки, подтверждение оплаты и закрытие сделки.</p>
+<table>
+<thead>
+<tr>
+<th><strong>Исход сделки</strong></th>
+<th><strong>Поле в UI</strong></th>
+<th><strong>Обяз.</strong></th>
+<th><strong>Источник / Логика</strong></th>
+<th><strong>Таблица в БД</strong></th>
+<th><strong>Поле в БД</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Все статусы</td>
+<td>Тип доставки</td>
+<td>Да</td>
+<td>Pickup / Courier</td>
+<td><code>client.leads_b2c</code></td>
+<td><code>delivery_type_id</code></td>
+</tr>
+<tr>
+<td>Все статусы</td>
+<td>Адрес доставки</td>
+<td>*</td>
+<td>Обязательно при Courier</td>
+<td><code>client.leads_b2c</code></td>
+<td><code>delivery_address</code></td>
+</tr>
+<tr>
+<td>Успех (WON)</td>
+<td>Статус оплаты</td>
+<td>Да</td>
+<td>Auto (Webhook из биллинга)</td>
+<td><code>client.leads_b2c</code></td>
+<td><code>payment_status_id</code></td>
+</tr>
+<tr>
+<td>Отказ (LOST)</td>
+<td>Причина отказа</td>
+<td>Да</td>
+<td>Manual (Справочник отказов)</td>
+<td><code>client.leads_b2c</code></td>
+<td><code>rejection_reason_id</code></td>
+</tr>
+</tbody></table>
+<hr>
+<h2 id="5-инструментарий-оператора-actions">5. Инструментарий оператора (Actions)</h2>
+<p>В интерфейсе карточки лида B2C встроены инструменты быстрых коммуникаций:</p>
+<ul>
+<li><strong>Call:</strong> Инициация исходящего вызова (интеграция с АТС / Call Center).</li>
+<li><strong>Listen:</strong> Прослушивание записей звонков, привязанных к текущему ID лида.</li>
+<li><strong>Messenger:</strong> Быстрый переход в чат (WhatsApp, SMS, почта) по номеру клиента.</li>
+<li><strong>SMS:</strong> Отправка SMS-сообщений на основе предустановленных шаблонов.</li>
+</ul>
+<hr>
+<h2 id="6-валидация-данных-regex-и-логика">6. Валидация данных (Regex и Логика)</h2>
+<ul>
+<li><strong>ИИН (<code>bin_iin</code>):</strong> <code>^\d{12}$</code>.</li>
+<li><strong>Телефон (<code>phone</code>):</strong> <code>^\+77\d{9}$</code>.</li>
+<li><strong>Дубликаты:</strong> Поиск активных лидов по совпадению ИИН для предотвращения создания множественных заявок от одного клиента.</li>
+</ul>
+<hr>
+<h2 id="7-sql-ddl-архитектура-бд">7. SQL DDL (Архитектура БД)</h2>
+<p>Ниже представлены SQL-скрипты для создания новых сущностей, спроектированных специально для B2C-модуля.</p>
+<pre><code class="language-sql">-- 1. Расширенный профиль физического лица (Связь 1:1 с client.clients)
+CREATE TABLE "client"."clients_b2c" (
+    "id" bigint PRIMARY KEY,
+    "client_id" bigint NOT NULL UNIQUE,
+    "first_name" varchar(100) NOT NULL,
+    "last_name" varchar(100) NOT NULL,
+    "middle_name" varchar(100),
+    "gender_id" bigint,
+    "date_of_birth" date,
+    "phone" varchar(20),
+    "email" varchar(255),
+  
+    -- Финансовые и скоринговые атрибуты
+    "income_amount" numeric(18,2),
+    "income_source_id" bigint,
+    "marital_status_id" bigint,
+  
+    -- Данные для Online Shop (kcell.kz / activ.kz)
+    "password_hash" varchar(255),
+  
+    "created_at" timestamp DEFAULT (now()),
+    "updated_at" timestamp DEFAULT (now()),
+  
+    FOREIGN KEY ("client_id") REFERENCES "client"."clients" ("id")
+);
+
+-- 2. Главная таблица сделок (Лидов) B2C
+CREATE TABLE "client"."leads_b2c" (
+    "id" bigint PRIMARY KEY,
+    "client_id" bigint NOT NULL,
+    "lead_number" varchar(50) UNIQUE,
+    "status_id" bigint NOT NULL,
+    "source_id" bigint,
+  
+    -- Блок распределения и SLA аналитики
+    "operator_id" bigint,
+    "assigned_at" timestamp,
+    "is_sla_breached" boolean DEFAULT false,
+  
+    -- Блок верификации
+    "biometric_status_id" bigint,
+    "cloud_sign_status_id" bigint,
+  
+    -- Блок логистики и финализации
+    "delivery_type_id" bigint,
+    "delivery_address" text,
+    "payment_status_id" bigint,
+    "rejection_reason_id" bigint,
+  
+    "created_at" timestamp DEFAULT (now()),
+    "updated_at" timestamp DEFAULT (now()),
+  
+    FOREIGN KEY ("client_id") REFERENCES "client"."clients" ("id")
+);
+</code></pre>
+<hr>
+<h2 id="8-процесс-распределения-и-контроля">8. Процесс распределения и контроля</h2>
+<pre><code class="language-plantuml">@startuml
+actor LeadService as "Lead Service"
+actor Watchdog as "SLA Watchdog"
+actor Operator as "Operator (UI)"
+actor Supervisor as "Supervisor (UI)"
+
+LeadService -&gt; Watchdog: Создан новый лид (NEW)
+Watchdog -&gt; Watchdog: Поиск свободных операторов
+
+alt Доступных операторов 0
+    Watchdog -&gt; Supervisor: WebSocket Alert: Очередь переполнена
+else Оператор найден
+    Watchdog -&gt; LeadService: Round Robin распределение
+    LeadService -&gt; Operator: Назначение лида (operator_id)
+    LeadService -&gt; Watchdog: Фиксация времени (assigned_at = now())
+
+    loop Каждую минуту
+        Watchdog -&gt; Watchdog: Проверка: now() - assigned_at &gt; 15 мин?
+    end
+
+    opt Время вышло, статус не изменен
+        Watchdog -&gt; LeadService: Обновление (is_sla_breached = true)
+        Watchdog -&gt; Supervisor: WebSocket Alert: SLA нарушен (ID лида)
+    end
+end
+@enduml
+</code></pre>
+<style>
+        .katex .frac-line {
+            border-bottom: 0.04em solid currentColor !important;
+            margin: 0.04em 0 !important;
+            padding: 0 !important;
+            position: relative !important;
+            top: 0 !important;
+            left: 0 !important;
+            right: 0 !important;
+            bottom: 0 !important;
+            transform: none !important;
+            translate: none !important;
+            width: 100% !important;
+            height: 0.04em !important;
+            vertical-align: middle !important;
+            display: block !important;
+            box-sizing: border-box !important;
+        }
+        .katex .mfrac {
+            vertical-align: middle !important;
+            display: inline-block !important;
+            text-align: center !important;
+            position: relative !important;
+        }
+        .katex .mfrac > .vlist-t {
+            display: inline-table !important;
+            vertical-align: middle !important;
+        }
+        .katex .mfrac .vlist-r {
+            display: table-row !important;
+        }
+        .katex .mfrac .vlist {
+            display: table-cell !important;
+            vertical-align: middle !important;
+            text-align: center !important;
+        }
+        .katex-display {
+            overflow: visible !important;
+            padding: 0.25em 0.35em 0.75em 0.9em !important;
+            margin: 1em 0 !important;
+            text-align: center !important;
+        }
+        .katex-display > .katex {
+            overflow: visible !important;
+        }
+        .katex-display > .katex > .katex-html {
+            overflow: visible !important;
+        }
+        .katex .sqrt-line {
+            border-top: 0.04em solid currentColor !important;
+            margin: 0 !important;
+            padding: 0 !important;
+            position: relative !important;
+            top: 0 !important;
+            transform: none !important;
+            vertical-align: top !important;
+        }
+        .katex .base {
+            display: inline-block !important;
+            vertical-align: baseline !important;
+            position: relative !important;
+        }
+        .katex .integral {
+            margin-left: 0.04em !important;
+            margin-right: 0.04em !important;
+        }
+        .katex * {
+            transform: none !important;
+            translate: none !important;
+            overflow: visible !important;
+        }
+    </style>
+</body>
+</html>
