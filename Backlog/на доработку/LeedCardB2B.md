@@ -1,9 +1,8 @@
-
----
-
 # Техническое задание: Модуль «CRM Лиды B2B»
 
 **Система:** SapaCRM
+
+**Версия:** 2.1 (Stage-Driven Architecture)
 
 **Область применения:** B2B продажи (сегменты SME, SA, LA)
 
@@ -11,254 +10,265 @@
 
 ## 1. Общая информация и цели
 
-Модуль предназначен для автоматизации полного цикла B2B-продаж: от первичной квалификации юридического лица до подписания контракта и оплаты. Включает интеграцию с биллингом (Nexign), системой скоринга (Avalon), контроль логистики и гибкую ролевую модель для управления сделками крупного бизнеса.
+Модуль предназначен для автоматизации полного цикла B2B-продаж. Данная спецификация спроектирована на основе воронки продаж (Pipeline-Driven). Поля и данные логически разбиты по этапам жизненного цикла сделки, что определяет момент их ввода пользователем или получения из внешних систем.
 
 ---
 
-## 2. Жизненный цикл Лида 
+## 2. Ролевая модель и управление изменениями
 
-Переход между этапами строго контролируется системой (Hard Stops). Нарушение логики блокируется на уровне API.
+1. **Разделение прав (SME vs SA/LA):**
+   * Менеджер может закрывать сделки SME (малый бизнес) и менять ЛПР самостоятельно.
+   * Для SA/LA (средний/крупный бизнес) смена ЛПР и перевод в отказ требуют участия Supervisor или Head.
+2. **Change Requests (Заявки на изменение):**
+   * Если менеджер меняет ЛПР в сделке SA/LA, создается заявка в `client.change_requests`. До одобрения руководителем изменения не применяются к основной таблице.
+3. **SLA Tracker:**
+   * Лид в статусе «Новый» более 15 минут получает метку «Просрочен» (`is_overdue = true`) с автоматической отправкой алерта руководителю.
 
-| **Этап** | **Название**                | **Ключевые действия в интерфейсе**                                                                                                                                | **Триггер перехода (Hard Stop)**                                          |
-| ------------------ | ----------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------- |
-| **Stage 1**  | **NEW (Знакомство)**      | Ввод БИН, автозаполнение реквизитов, загрузка данных из Nexign (баланс, долги). Привязка ЛПР и верификация (OTP). | Валидный БИН, успешная верификация OTP-кодом.               |
-| **Stage 2**  | **HOT (Оффер)**                | Выбор оборудования/услуг. Выбор типа оплаты. Указание логистики (доставка обязательна для SA). Бронь.             | Создан тикет в Support (для бронирования оборудования). |
-| **Stage 3**  | **THINKING (Возражения)** | Анализ конкурентов (выбор оператора), работа с сомнениями. Авторасчет суммы.                                                        | Заполнены поля `competitor_id`и `objection_id`.                              |
-| **Stage 4**  | **PAYMENT (Оплата)**          | Внутренний и внешний (Avalon) скоринг.                                                                                                                                    | Статус скоринга =`APPROVED`.                                                   |
-| **Stage 5**  | **WON / LOST**                      | Отправка ссылок на оплату/договор. Подтверждение оплаты. Перевод в отказ с указанием причины.                        | Оплата (ESB) + Ручная проверка скана договора.                |
+```plantuml
+@startuml
+skinparam activity {
+  BackgroundColor #f9f9f9
+  BorderColor #333
+}
 
----
+start
 
-## 3. Ролевая модель и управление доступом
+partition "SLA Tracker (Фоновый мониторинг)" {
+  :Лид перешел в статус "Новый";
+  if (Время в статусе > 15 мин?) then (Да)
+    :Установить is_overdue = true;
+    :Автоматический алерт Supervisor/Head;
+  else (Нет)
+    repeat
+    :Ожидание;
+    repeat while (Время < 15 мин?)
+  endif
+}
 
-Система разделяет ответственность между департаментами (Acquisition / Retention) и регулирует права на основе сегмента бизнеса (`clients_b2b.segment_id`).
+partition "Действия Менеджера" {
+  :Менеджер инициирует изменение;
+  if (Сегмент клиента?) then (SME)
+    :Действие разрешено системой;
+    :Изменения сохранены в основной таблице;
+  else (SA/LA)
+    :Действие заблокировано для прямого сохранения;
+    :Создана запись в client.change_requests;
+    if (Решение Supervisor/Head?) then (Одобрить)
+      :Изменения применяются к основной БД;
+    else (Отклонить)
+      :Изменения сбрасываются;
+    endif
+  endif
+}
 
-1. **Сегмент SME (Малый бизнес):**
-   * Менеджер имеет право самостоятельно изменять ЛПР и переводить лид в статус «Отказ».
-2. **Сегменты SA / LA (Средний и Крупный бизнес):**
-   * Смена основного ЛПР, изменение типа оплаты или параметров сделки доступно  **только через систему заявок (Change Request)** .
-   * Перевод лида в статус «Отказ» недоступен Менеджеру и требует участия роли **Supervisor** или  **Head** .
-3. **Контроль SLA (SLA Tracker):**
-   * Если лид находится в статусе «Новый» (в очереди) более 15 минут, система автоматически устанавливает метку «Просрочен» и отправляет уведомление руководителю.
+stop
+@enduml
 
----
-
-## 4. Модуль управления изменениями (Change Requests)
-
-Для защиты данных от несанкционированного изменения внедрен процесс согласования:
-
-1. **Инициация:** Менеджер инициирует изменение (например, смену ЛПР).
-2. **Ожидание (Pending):** В БД создается заявка. В интерфейсе Менеджер видит новые данные с желтой плашкой «На согласовании». В основной таблице контактов данные  **не меняются** .
-3. **Резолюция:** Supervisor одобряет (данные перезаписываются) или отклоняет заявку (данные откатываются к исходным).
-
----
-
-## 5. Маппинг полей сущности Лид B2B с базой данных
-
-### Таблица 1: Профиль организации
-
-| **Поле**                | **Тип** | **Обяз.** | **Логика / Валидация**           | **Mapping (БД)**   |
-| --------------------------------- | ---------------- | ------------------- | ----------------------------------------------------- | -------------------------- |
-| **БИН**                  | Mask             | Да                | 12 цифр,**Immutable**(неизменное) | `clients_b2b.bin`        |
-| Наименование          | Input            | Да                | Автозаполнение из ГБД ЮЛ         | `clients_b2b.name`       |
-| Сегмент                    | Select           | Да                | SME / SA / LA                                         | `clients_b2b.segment_id` |
-| Юридический адрес | Input            | Нет              | Текст                                            | `clients_b2b.address`    |
-
-### Таблица 2: Контактные лица и ЛПР
-
-| **Поле**              | **Тип** | **Обяз.** | **Логика / Валидация** | **Mapping (БД)**               |
-| ------------------------------- | ---------------- | ------------------- | ------------------------------------------- | -------------------------------------- |
-| ФИО контакта         | Input            | Да                | Текст                                  | `contacts.full_name`                 |
-| Номер телефона     | Mask             | Да                | +7 (7XX) XXX-XX-XX                          | `contacts.phone`                     |
-| Роль контакта       | Select           | Да                | Справочник `ref_contact_roles`  | `lead_contacts_link.role_id`         |
-| Основной ЛПР         | Checkbox         | Да                | При SA/LA — запуск Change Request | `lead_contacts_link.is_primary`      |
-| Статус одобрения | Label            | Да                | Enum: ACTIVE / PENDING / REJECTED           | `lead_contacts_link.approval_status` |
-
-### Таблица 3: Сведения из Nexign (Readonly)
-
-| **Поле**                                | **Описание**                                                   | **Mapping (БД)**       |
-| ------------------------------------------------- | ---------------------------------------------------------------------------- | ------------------------------ |
-| Текущий баланс                       | Остаток средств компании (₸)                          | `nexign_data.balance`        |
-| Дебиторская задолженность | Наличие долгов по действующим контрактам | `nexign_data.debt`           |
-| Лицевой счет                           | Основной ЛС в биллинге                                    | `nexign_data.account_number` |
-
-### Таблица 4: Спецификация и Оффер
-
-| **Поле**            | **Тип** | **Обяз.** | **Логика / Валидация**        | **Mapping (БД)**        |
-| ----------------------------- | ---------------- | ------------------- | -------------------------------------------------- | ------------------------------- |
-| Продукт / Услуга | Select           | Да                | Справочник `ref_products`              | `leads_b2b_items.product_id`  |
-| Количество          | Input            | Да                | Число > 0                                     | `leads_b2b_items.quantity`    |
-| Цена за ед.           | Money            | Да                | Индивидуальная цена сделки | `leads_b2b_items.unit_price`  |
-| Тип оплаты           | Select           | Да                | Контракт / Полная стоимость | `leads_b2b.payment_type_id`   |
-| Адрес доставки   | Input            | *                   | Обязательно, если сегмент SA | `leads_b2b.delivery_address`  |
-| Номер брони         | Label            | Нет              | Генерируется Support-системой  | `leads_b2b.support_ticket_id` |
-
-### Таблица 5: Аналитика и Возражения (THINKING)
-
-| **Поле**                  | **Тип** | **Обяз.** | **Логика / Валидация** | **Mapping (БД)**     |
-| ----------------------------------- | ---------------- | ------------------- | ------------------------------------------- | ---------------------------- |
-| Текущий оператор     | Select           | Да                | Справочник конкурентов | `leads_b2b.competitor_id`  |
-| Причина сомнения     | Select           | Да                | Справочник возражений   | `leads_b2b.objection_id`   |
-| Дата след. контакта | Date             | Да                | Не может быть в прошлом  | `leads_b2b.next_call_date` |
-
-### Таблица 6: Верификация и Финал
-
-| **Поле**          | **Тип** | **Обяз.** | **Логика / Валидация**        | **Mapping (БД)**          |
-| --------------------------- | ---------------- | ------------------- | -------------------------------------------------- | --------------------------------- |
-| SMS OTP                     | Mask             | Да                | 6 цифр, проверка ЛПР                | `leads_b2b.is_otp_verified`     |
-| Статус Avalon         | Label            | Да                | Approved/Rejected                                  | `leads_b2b.avalon_status`       |
-| Факт оплаты       | Checkbox         | Да                | Read-only (из ESB/Nexign)                        | `leads_b2b.is_paid`             |
-| Скан договора   | Checkbox         | Да                | Ручная проверка менеджером | `leads_b2b.is_doc_verified`     |
-| Причина отказа | Select           | Нет              | Для CLOSED_LOST (справочник)          | `leads_b2b.rejection_reason_id` |
-
-### Таблица 7: Метаданные сделки
-
-| **Поле**              | **Тип** | **Обяз.** | **Логика / Валидация**     | **Mapping (БД)**     |
-| ------------------------------- | ---------------- | ------------------- | ----------------------------------------------- | ---------------------------- |
-| **ID лида**           | UUID             | Да                | Системный ключ                     | `leads_b2b.id`             |
-| Номер лида             | String           | Да                | Формат: 2424#                             | `leads_b2b.lead_number`    |
-| Дата создания       | Datetime         | Да                | Автоматическая генерация | `leads_b2b.created_at`     |
-| Направление          | Select           | Да                | Продажа / Услуга                   | `leads_b2b.direction_id`   |
-| Ответственный      | Search           | Да                | Сотрудник из `employees`           | `leads_b2b.responsible_id` |
-| Отдел / Сектор       | Select           | Да                | Acquisition / Retention                         | `leads_b2b.sector_id`      |
-| Метка "Просрочен" | Boolean          | Да                | Авторасчет по SLA                   | `leads_b2b.is_overdue`     |
+```
 
 ---
 
-## 6. Валидация данных
+## 3. Маппинг полей по этапам воронки продаж
 
-* **БИН:** `^\d{12}$`. Неизменяемое поле.
-* **Телефон (РК):** `^\+77\d{9}$`.
-* **OTP-код:** `^\d{6}$`.
-* **Уникальность:** Запрет создания нового лида, если в БД существует незакрытый лид с аналогичным БИН.
+Системные поля (в b2c это боковая панель со статичной информацией о лиде)
+
+Генерируются при создании лида и отображаются на всех этапах в верхней панели (Header).
+
+| **Поле в UI**         | **Источник / Логика** | **Таблица в БД** | **Поле в БД**  | **Тип** |
+| -------------------------------- | ----------------------------------------- | -------------------------------- | --------------------------- | ---------------- |
+| ID лида                      | System Auto                               | `client.leads_b2b`             | `id`                      | `bigint`       |
+| Номер лида              | System (Формат: 2424#)              | `client.leads_b2b`             | `lead_number`             | `varchar(50)`  |
+| Дата создания        | System Auto                               | `client.leads_b2b`             | `created_at`              | `timestamp`    |
+| Направление           | User Input (Старт)                   | `client.leads_b2b`             | `direction_id`            | `bigint`       |
+| Отдел                       | User Profile                              | `client.leads_b2b`             | `department_id`           | `bigint`       |
+| Сектор                     | Auto по БИН                          | `client.leads_b2b`             | `sector_id`               | `bigint`       |
+| Ответственный (Acq) | System Auto / Manual                      | `client.leads_b2b`             | `acquisition_employee_id` | `bigint`       |
+| Ответственный (Ret) | System Auto / Manual                      | `client.leads_b2b`             | `retention_employee_id`   | `bigint`       |
+| Метка "Просрочен"  | Auto (SLA > 15m)                          | `client.leads_b2b`             | `is_overdue`              | `boolean`      |
 
 ---
 
-## 7. Реестр API-методов
+### Этап 1: NEW (Знакомство)
+
+**Цель:** Идентификация компании, загрузка финансовых данных, фиксация ЛПР и верификация.
+
+**Триггер перехода:** Введен OTP код (`is_otp_verified = true`).
+
+| **Поле в UI**            | **Обяз.** | **Источник / Логика** | **Таблица в БД** | **Поле в БД**     |
+| ----------------------------------- | ------------------- | ----------------------------------------- | -------------------------------- | ------------------------------ |
+| БИН                              | Да                | User Input (Immutable)                    | `client.clients_b2b`           | `bin_iin`                    |
+| Наименование            | Да                | Auto (ГБД ЮЛ по БИН)            | `client.clients_b2b`           | `company_name`               |
+| Сегмент / Индустрия | Да                | Auto / Manual                             | `client.clients_b2b`           | `segment_id`,`industry_id` |
+| Юридический адрес   | Нет              | Manual                                    | `client.clients`               | `legal_address`              |
+| Текущий баланс (₸)    | Да                | Auto (из Nexign)                        | `client.clients`               | `current_balance`            |
+| Задолженность (₸)     | Да                | Auto (из Nexign)                        | `client.clients`               | `charged_amount`             |
+| Лицевой счет             | Да                | Auto (из Nexign)                        | `client.clients`               | `account_number`             |
+| ФИО контакта (ЛПР)    | Да                | Manual                                    | `client.contacts`              | `full_name`                  |
+| Телефон контакта     | Да                | Manual                                    | `client.contacts`              | `phone`                      |
+| Роль контакта           | Да                | Manual (Справочник)             | `client.lead_contacts_link`    | `role_id`                    |
+| Основной ЛПР (Флаг)  | Да                | Manual (Check)                            | `client.lead_contacts_link`    | `is_primary`                 |
+| SMS OTP                             | Да                | System / Manual (Ввод 6 цифр)     | `client.leads_b2b`             | `is_otp_verified`            |
+
+---
+
+### Этап 2: HOT (Оффер и Спецификация)
+
+**Цель:** Формирование корзины продуктов, бронирование оборудования и выбор типа оплаты.
+
+**Триггер перехода:** Сформирована корзина, получен номер тикета брони.
+
+| **Поле в UI**      | **Обяз.** | **Источник / Логика**    | **Таблица в БД** | **Поле в БД** |
+| ----------------------------- | ------------------- | -------------------------------------------- | -------------------------------- | -------------------------- |
+| Продукт / Услуга | Да                | Manual (Справочник)                | `client.lead_items`            | `product_id`             |
+| Тип продукта       | Да                | Auto (Оборудование/Услуга) | `client.lead_items`            | `item_type`              |
+| Количество          | Да                | Manual (Число > 0)                      | `client.lead_items`            | `quantity`               |
+| Цена за ед.           | Да                | Manual                                       | `client.lead_items`            | `unit_price`             |
+| Скидка                  | Нет              | Manual                                       | `client.lead_items`            | `discount`               |
+| Тип оплаты           | Да                | Manual (Контракт/Полная)       | `client.leads_b2b`             | `payment_type_id`        |
+| Адрес доставки   | *                   | Обязательно для SA             | `client.leads_b2b`             | `delivery_address`       |
+| Номер брони         | Да                | Auto (от Support)                          | `client.leads_b2b`             | `support_ticket_id`      |
+
+---
+
+### Этап 3: THINKING (Возражения и Аналитика)
+
+**Цель:** Сбор конкурентной аналитики, отработка возражений, назначение фоллоу-апа.
+
+**Триггер перехода:** Заполнены конкурент и причина сомнений.
+
+| **Поле в UI**        | **Обяз.** | **Источник / Логика** | **Таблица в БД** | **Поле в БД** |
+| ------------------------------- | ------------------- | ----------------------------------------- | -------------------------------- | -------------------------- |
+| Текущий оператор | Да                | Manual (Справочник)             | `client.leads_b2b`             | `competitor_id`          |
+| Причина сомнения | Да                | Manual (Справочник)             | `client.leads_b2b`             | `objection_id`           |
+| Комментарий          | Нет              | Manual (Свободный текст)    | `client.leads_b2b`             | `objection_comment`      |
+| Дата след. звонка | Да                | Manual (Не в прошлом)           | `client.leads_b2b`             | `next_call_date`         |
+
+---
+
+### Этап 4: PAYMENT (Скоринг и Оплата)
+
+**Цель:** Проверка надежности клиента через внешние системы, подготовка к оплате.
+
+**Триггер перехода:** Статус скоринга APPROVED.
+
+| **Поле в UI** | **Обяз.** | **Источник / Логика**           | **Таблица в БД** | **Поле в БД** |
+| ------------------------ | ------------------- | --------------------------------------------------- | -------------------------------- | -------------------------- |
+| Статус Avalon      | Да                | Auto (Интеграция со скорингом) | `client.leads_b2b`             | `scoring_status_id`      |
+
+---
+
+### Этап 5: CLOSED (WON / LOST)
+
+**Цель:** Финализация сделки. Оплата и документы (WON) или фиксация причины отказа (LOST).
+
+| **Исход сделки** | **Поле в UI**    | **Обяз.** | **Источник / Логика**        | **Таблица в БД** | **Поле в БД** |
+| --------------------------------- | --------------------------- | ------------------- | ------------------------------------------------ | -------------------------------- | -------------------------- |
+| Успех (CLOSED_WON)           | Факт оплаты       | Да                | Auto (Webhook из ESB)                          | `client.leads_b2b`             | `is_paid`                |
+| Успех (CLOSED_WON)           | Скан договора   | Да                | Manual (Проверено менеджером) | `client.leads_b2b`             | `is_doc_verified`        |
+| Отказ (CLOSED_LOST)          | Причина отказа | Да                | Manual (Справочник отказов)     | `client.leads_b2b`             | `rejection_reason_id`    |
+
+---
+
+## 4. Валидация данных (Regex и Логика)
+
+* **БИН (`bin_iin`):** `^\d{12}$`. Не подлежит изменению (Immutable) после создания лида.
+* **Телефон (`phone`):** `^\+77\d{9}$`.
+* **OTP-код (`is_otp_verified`):** `^\d{6}$`.
+* **Уникальность Лида:** Система блокирует создание новой сделки, если в БД уже существует активный (не закрытый) лид с таким же `client_b2b_id`.
+
+---
+
+## 5. Реестр API-методов
 
 | **Группа** | **Метод** | **Путь**                    | **Описание**                                                                         |
 | ---------------------- | -------------------- | ------------------------------------- | -------------------------------------------------------------------------------------------------- |
-| **Leads**        | GET                  | `/api/v1/b2b/leads`                 | Список лидов (фильтры: статус, ответственный, сегмент) |
-|                        | POST                 | `/api/v1/b2b/leads`                 | Создание лида                                                                          |
-|                        | PATCH                | `/api/v1/b2b/leads/{id}/status`     | Смена статуса / Закрытие лида                                              |
-| **Clients**      | GET                  | `/api/v1/b2b/clients/search`        | Поиск компании по БИН                                                            |
+| Leads                  | GET                  | `/api/v1/b2b/leads`                 | Список лидов (фильтры: статус, ответственный, сегмент) |
+|                        | POST                 | `/api/v1/b2b/leads`                 | Создание лида (Старт Этапа 1)                                                |
+|                        | PATCH                | `/api/v1/b2b/leads/{id}/status`     | Смена этапа воронки (Проверка Hard Stops)                                 |
+| Clients                | GET                  | `/api/v1/b2b/clients/search`        | Поиск компании по БИН                                                            |
 |                        | GET                  | `/api/v1/b2b/clients/{id}/billing`  | Запрос баланса и долгов (из Nexign)                                          |
-| **Contacts**     | POST                 | `/api/v1/b2b/leads/{id}/contacts`   | Привязка ЛПР                                                                            |
-| **Products**     | PUT                  | `/api/v1/b2b/leads/{id}/items`      | Обновление состава корзины                                                 |
-| **Requests**     | POST                 | `/api/v1/b2b/requests`              | Создание Change Request (Смена ЛПР и др.)                                       |
+| Contacts               | POST                 | `/api/v1/b2b/leads/{id}/contacts`   | Привязка ЛПР                                                                            |
+| Products               | PUT                  | `/api/v1/b2b/leads/{id}/items`      | Обновление состава корзины (Этап 2)                                    |
+| Requests               | POST                 | `/api/v1/b2b/requests`              | Создание Change Request (Смена ЛПР для SA/LA)                                   |
 |                        | PATCH                | `/api/v1/b2b/requests/{id}/resolve` | Обработка заявки руководителем                                         |
-| **Comms**        | POST                 | `/api/v1/b2b/leads/{id}/send-link`  | Отправка ссылок на оплату / договор по SMS/Email                    |
+| Comms                  | POST                 | `/api/v1/b2b/leads/{id}/send-link`  | Отправка ссылок на оплату / договор (Этап 4/5)                    |
 
 ---
 
-## 8. Архитектура и Структура БД (SQL)
+## 6. SQL DDL (Архитектура БД)
 
-
-```SQL
--- Таблица связей Контактов (ЛПР) с поддержкой согласования
-CREATE TABLE client.lead_contacts_link (
-    lead_id UUID NOT NULL, 
-    contact_id UUID NOT NULL,
-    role_id INT NOT NULL, 
-    is_primary BOOLEAN DEFAULT FALSE,
-    approval_status VARCHAR(20) DEFAULT 'ACTIVE',
-    PRIMARY KEY (lead_id, contact_id)
+```sql
+-- 1. Главная таблица сделок (Лидов)
+CREATE TABLE "client"."leads_b2b" (
+    "id" bigint PRIMARY KEY,
+    "client_b2b_id" bigint NOT NULL,
+    "lead_number" varchar(50) UNIQUE,
+    "status_id" bigint NOT NULL,
+    "direction_id" bigint,
+    "department_id" bigint,
+    "sector_id" bigint,
+    "acquisition_employee_id" bigint,
+    "retention_employee_id" bigint,
+    "is_overdue" boolean DEFAULT false,
+  
+    -- Блок HOT (Оффер и Логистика)
+    "delivery_address" text,
+    "payment_type_id" bigint,
+    "support_ticket_id" varchar(100),
+  
+    -- Блок THINKING (Возражения)
+    "competitor_id" bigint,
+    "objection_id" bigint,
+    "objection_comment" text,
+    "next_call_date" timestamp,
+  
+    -- Блок PAYMENT & FINAL
+    "is_otp_verified" boolean DEFAULT false,
+    "scoring_status_id" bigint,
+    "is_paid" boolean DEFAULT false,
+    "is_doc_verified" boolean DEFAULT false,
+    "rejection_reason_id" bigint,
+  
+    "created_at" timestamp DEFAULT (now()),
+    "updated_at" timestamp DEFAULT (now()),
+  
+    FOREIGN KEY ("client_b2b_id") REFERENCES "client"."clients_b2b" ("id")
 );
 
--- Таблица заявок на изменение (Change Requests)
-CREATE TABLE client.change_requests (
-    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-    lead_id UUID NOT NULL,
-    requester_id INT NOT NULL,
-    approver_id INT,
-    entity_type VARCHAR(50), 
-    old_value_id UUID,
-    new_value_id UUID,
-    status VARCHAR(20) DEFAULT 'PENDING',
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+-- 2. Таблица ролей контактов в конкретной сделке
+CREATE TABLE "client"."lead_contacts_link" (
+    "lead_id" bigint NOT NULL,
+    "contact_id" bigint NOT NULL,
+    "role_id" bigint NOT NULL,
+    "is_primary" boolean DEFAULT false,
+    "approval_status" varchar(50) DEFAULT 'ACTIVE',
+    PRIMARY KEY ("lead_id", "contact_id"),
+    FOREIGN KEY ("lead_id") REFERENCES "client"."leads_b2b" ("id")
+);
+
+-- 3. Корзина продуктов по сделке
+CREATE TABLE "client"."lead_items" (
+    "id" bigint PRIMARY KEY,
+    "lead_id" bigint NOT NULL,
+    "product_id" bigint NOT NULL,
+    "item_type" varchar(50), 
+    "quantity" int DEFAULT 1,
+    "unit_price" numeric(38,2),
+    "discount" numeric(38,2) DEFAULT 0,
+    FOREIGN KEY ("lead_id") REFERENCES "client"."leads_b2b" ("id")
+);
+
+-- 4. Таблица заявок на изменение (Change Requests)
+CREATE TABLE "client"."change_requests" (
+    "id" bigint PRIMARY KEY,
+    "lead_id" bigint NOT NULL,
+    "requester_id" bigint NOT NULL,
+    "approver_id" bigint,
+    "entity_type" varchar(50), 
+    "old_value_id" bigint,
+    "new_value_id" bigint,
+    "status" varchar(20) DEFAULT 'PENDING',
+    "created_at" timestamp DEFAULT (now()),
+    FOREIGN KEY ("lead_id") REFERENCES "client"."leads_b2b" ("id")
 );
 ```
-
----
-
-## 9. Диаграммы взаимодействия (Sequence Diagrams)
-
-*Ниже представлены архитектурные схемы PlantUML для вставки в Wiki (Confluence/GitLab).*
-
-### 9.1. Жизненный цикл Лида (Воронка)
-
-**Фрагмент кода**
-
-```plantuml
-@startuml
-autonumber
-actor "Менеджер" as Manager
-participant "SapaCRM" as UI
-participant "API Gateway" as API
-participant "Nexign" as Nexign
-participant "Support" as Support
-participant "Avalon" as Avalon
-
-Manager -> UI: Ввод БИН
-UI -> API: GET /billing/info
-API -> Nexign: Запрос долгов и баланса
-Nexign --> API: Данные
-API --> UI: Отображение профиля
-
-Manager -> UI: Выбор товара, адрес доставки (SA)
-UI -> API: Создание брони
-API -> Support: Тикет в логистику
-
-Manager -> UI: Отправка на скоринг
-API -> Avalon: Внутренний/Внешний скоринг
-alt Скоринг успешен
-  Avalon --> API: Approved
-  API --> UI: Статус SCORING_APPROVED
-else Скоринг отклонён
-  Avalon --> API: Declined
-  API --> UI: Статус SCORING_FAILED
-end
-
-Manager -> UI: Отправка ссылок клиенту
-UI -> API: POST /send-link
-API -> Nexign: Подтверждение оплаты
-alt Оплата прошла
-  Nexign --> API: PAID
-  API --> UI: Статус PAID
-  Manager -> UI: Закрытие сделки (CLOSED_WON)
-else Ошибка оплаты
-  Nexign --> API: FAILED
-  API --> UI: Статус PAYMENT_FAILED
-end
-@enduml
-
-```
-
-### 9.2. Управление правами 
-
-```plantuml
-@startuml
-autonumber
-actor "Manager" as Manager
-actor "Head" as Boss
-participant "SapaCRM" as System
-
-Manager -> System: Отказ по лиду (Сегмент LA)
-System -> System: Проверка прав (Acquisition/Retention)
-alt Права недостаточны
-  System --> Manager: Ошибка: Требуется уровень Head
-  Boss -> System: Утверждение отказа
-  System --> Boss: Лид закрыт (CLOSED_LOST)
-else Права достаточны
-  System --> Manager: Лид закрыт (CLOSED_LOST)
-end
-@enduml
-```
-
----
-
-## 10. Открытые вопросы к Заказчику
-
-1. **Интеграция Nexign:** Подтвердить, допустимо ли кэшировать данные баланса на 1 час для снижения нагрузки на биллинг, или требуется строго Live-запрос при каждом открытии карточки?
-2. **Срок жизни брони:** Через какое время тикет на бронь оборудования аннулируется, если клиент не перешел к оплате?
-3. **Avalon:** Блокировать ли интерфейс менеджера (Read-only) на время ожидания ответа от скоринговой системы?
