@@ -1,102 +1,188 @@
+# Техническое задание: Модуль «CRM Лиды B2B» (v3.0)
 
-# Техническое задание: Модуль «CRM Лиды B2B» (v2.6)
+**Система:** SapaCRM
 
-## 1. Описание модуля
+**Роль:** Senior System Analyst & Enterprise Architect
 
-Модуль предназначен для управления корпоративными продажами в сегментах **SME** (Малый и средний бизнес), **SA** (Strategic Accounts) и **LA** (Large Accounts). Основная цель — автоматизация воронки продаж от первичного интереса до заключения контракта с интеграцией в финансовый контур SAP и биллинг Nexign.
+**Микросервис:** `sapa-crm-kcell-client`
 
-**Основные характеристики:**
+**Сектор:** Корпоративные продажи (SME, SA, LA)
 
-* **Микросервис:** `sapa-crm-kcell-client`.
-* **Ролевая модель:** Acquisition (привлечение) и Retention (удержание).
-* **Стек:** Java (Spring Boot), React, PostgreSQL (схема `client`).
-* **Интеграции:** Keycloak (IAM), SAP (бухгалтерия), Nexign (биллинг), Corp KPSS (скоринг).
+```plantuml
+@startuml
+!theme plain
+skinparam Linetype ortho
+
+package "Client Schema" {
+    entity "client.clients" as base {
+        * id : bigint <<PK>>
+        --
+        bin_iin : varchar(12) <<Unique>>
+        client_type_id : bigint
+        residency_id : bigint
+        language_id : bigint
+    }
+
+    entity "client.clients_b2c" as b2c {
+        * id : bigint <<PK>>
+        --
+        client_id : bigint <<FK>>
+        first_name : varchar(255)
+        last_name : varchar(255)
+        middle_name : varchar(255)
+        birth_date : date
+        income_level : numeric(38,2)
+    }
+
+    entity "client.client_contacts" as contacts {
+        * id : bigint <<PK>>
+        --
+        client_id : bigint <<FK>>
+        contact_type_id : bigint
+        value : varchar(255)
+        is_main : boolean
+    }
+
+    entity "client.leads_b2c" as leads {
+        * id : bigint <<PK>>
+        --
+        lead_number : varchar(50)
+        client_id : bigint <<FK>>
+        operator_id : bigint <<FK>>
+        status_id : bigint <<FK>>
+        assigned_at : timestamp
+    }
+}
+
+' Relationships
+base ||--|| b2c : "1:1 profile extension"
+base ||--o{ contacts : "linked by client_id"
+b2c ||..o{ contacts : "logical link for B2C contacts"
+base ||--o{ leads : "leads reference base client"
+
+@enduml
+```
+
+## 1. Архитектурные принципы и Дедупликация
+
+Модуль B2B спроектирован для работы с юридическими лицами. Ключевым идентификатором является  **БИН** .
+
+### 1.1. Механизм дедупликации (Check-Before-Create)
+
+Проверка выполняется по БИН организации до открытия формы создания лида.
+
+| **Условие**                                        | **Сегмент** | **Действие системы**                                                                                          |
+| --------------------------------------------------------------- | ------------------------ | ---------------------------------------------------------------------------------------------------------------------------------- |
+| **БИН найден**(есть активный лид) | SME / SA                 | **Merge:**Новый запрос добавляется как активность в существующую карточку. |
+| **БИН найден**(активный лид)          | LA                       | **Hard Block:**Редирект в карточку текущего КАЕ.                                                       |
+| **БИН найден**(в портфеле КАЕ)       | LA                       | **Direct Route:**Назначение лида закрепленному менеджеру, минуя Round Robin.              |
+| **БИН не найден**                              | Все                   | **New Lead:**Запуск алгоритма Round Robin.                                                                          |
 
 ---
 
-## 2. Маппинг полей по этапам воронки
+## 2. Сквозные системные поля (Metadata)
 
-Все идентификаторы (ID) и внешние ключи используют тип  **bigint** .
+Отображаются в Header-панели карточки. Все идентификаторы имеют тип `bigint`.
+
+| **Поле в UI**      | **Источник / Логика** | **Таблица** | **Поле**  | **Тип** |
+| ----------------------------- | ----------------------------------------- | ------------------------ | ------------------- | ---------------- |
+| **ID лида**         | System Auto                               | `client.leads_b2b`     | `id`              | `bigint`       |
+| **Номер лида** | B-YYYYMM-XXXX                             | `client.leads_b2b`     | `lead_number`     | `varchar`      |
+| **Acquisition Mgr**     | Round Robin (Pool ACQ)                    | `client.leads_b2b`     | `acq_employee_id` | `bigint`       |
+| **Retention Mgr**       | Round Robin (Pool RET)                    | `client.leads_b2b`     | `ret_employee_id` | `bigint`       |
+| **Метка SLA**      | > 15 мин (assigned_at)                 | `client.leads_b2b`     | `is_overdue`      | `boolean`      |
+
+---
+
+## 3. Маппинг по этапам жизненного цикла
 
 ### Этап 1: ACQUAINTANCE (Данные компании и ЛПР)
 
-**Цель:** Идентификация организации и верификация контактного лица.
+Для сегментов **SA/LA** данные ЛПР (Лицо, принимающее решение) защищены механизмом Change Request.
 
-| **Элемент UI**       | **Таблица в БД** | **Поле в БД** | **Тип** | **Бизнес-логика**                                         |
-| --------------------------------- | -------------------------------- | -------------------------- | ---------------- | --------------------------------------------------------------------------- |
-| БИН                            | `client.clients_b2b`           | `bin_iin`                | `varchar`      | Мастер-данные. Редактирование запрещено. |
-| Название компании | `client.clients_b2b`           | `company_name`           | `varchar`      | Изменение через Change Request (для SA/LA).                |
-| Категория (SME/SA/LA)    | `client.clients_b2b`           | `category_id`            | `bigint`       | Влияет на логику распределения и прав.      |
-| ФИО ЛПР                     | `client.leads_b2b`             | `lpr_name`               | `varchar`      | Контактное лицо по данной сделке.               |
-| Телефон ЛПР             | `client.leads_b2b`             | `lpr_phone`              | `varchar`      | Обязательно для связи и OTP.                            |
-| Почта ЛПР                 | `client.leads_b2b`             | `lpr_email`              | `varchar`      | Для отправки КП и счетов.                               |
+| **Поле в UI**                    | **Обяз.** | **Таблица**   | **Поле**  | **Логика изменения (SA/LA)** |
+| ------------------------------------------- | ------------------- | -------------------------- | ------------------- | ------------------------------------------------- |
+| **БИН**                            | Да                | `client.clients_b2b`     | `bin_iin`         | Запрещено                                |
+| **Название компании** | Да                | `client.clients_b2b`     | `company_name`    | Запрещено                                |
+| **ФИО ЛПР**                     | Да                | `client.leads_b2b`       | `lpr_name`        | **Change Request**                          |
+| **Должность ЛПР**         | Да                | `client.leads_b2b`       | `lpr_position_id` | **Change Request**                          |
+| **Контакты ЛПР**           | Да                | `client.client_contacts` | `value`           | **Change Request**                          |
 
 ### Этап 2: NEEDS (Корзина продуктов)
 
-**Цель:** Формирование коммерческого предложения.
+| **Поле в UI**                | **Обяз.** | **Таблица** | **Поле** | **Комментарий** |
+| --------------------------------------- | ------------------- | ------------------------ | ------------------ | -------------------------------- |
+| **Продукт**                | Да                | `client.lead_items`    | `product_id`     | Связь с `ref_products`   |
+| **Количество**          | Да                | `client.lead_items`    | `quantity`       |                                  |
+| **Сумма контракта** | Да                | `client.leads_b2b`     | `total_amount`   | Auto-sum корзины          |
 
-| **Элемент UI** | **Таблица в БД** | **Поле в БД** | **Тип** | **Бизнес-логика**                      |
-| --------------------------- | -------------------------------- | -------------------------- | ---------------- | -------------------------------------------------------- |
-| Выбор продукта | `client.lead_items`            | `product_id`             | `bigint`       | Справочник из Nexign/Management.             |
-| Количество        | `client.lead_items`            | `quantity`               | `int`          | Значение > 0.                                    |
-| Цена за ед.         | `client.lead_items`            | `unit_price`             | `numeric`      | Автозаполнение из прайс-листа. |
-| Общая сумма       | `client.leads_b2b`             | `total_amount`           | `numeric`      | Агрегат `SUM(unit_price * quantity)`.           |
+### Этап 3: VERIFICATION (Скоринг Avalon)
 
-### Этап 3: VERIFICATION (Скоринг и Финансы)
-
-**Цель:** Проверка надежности клиента и дебиторской задолженности.
-
-| **Элемент UI**          | **Таблица в БД** | **Поле в БД** | **Тип** | **Бизнес-логика**                   |
-| ------------------------------------ | -------------------------------- | -------------------------- | ---------------- | ----------------------------------------------------- |
-| Статус скоринга        | `client.leads_b2b`             | `scoring_status_id`      | `bigint`       | Результат интеграции с Corp KPSS. |
-| Дебиторская задолж. | `client.leads_b2b`             | `debt_amount`            | `numeric`      | Данные из SAP (только чтение).    |
-| Метод оплаты              | `client.leads_b2b`             | `payment_method_id`      | `bigint`       | Авансовый / Кредитный.              |
+| **Поле в UI**                | **Обяз.** | **Логика**         | **Таблица** | **Поле** |
+| --------------------------------------- | ------------------- | ------------------------------ | ------------------------ | ------------------ |
+| **Прескоринг**          | Да                | CRM Internal Logic             | `client.leads_b2b`     | `prescoring_res` |
+| **Внешний скоринг** | Да                | Интеграция с Avalon | `client.leads_b2b`     | `external_score` |
 
 ---
 
-## 3. Описание методов API
+## 4. Управление изменениями (Change Requests)
 
-Согласно спецификации `api-kcell.json` и `kcell-api.json`.
+При изменении данных ЛПР в сегментах SA/LA создается запись в `client.change_requests`.
 
-### 3.1. Создание и получение лида
+**Структура JSON (`new_value`):**
 
-* **POST `/api/v1/leads/b2b`**
-  * **Описание:** Создает запись в `leads_b2b` и инициирует Round Robin.
-  * **Body:** `{ "client_id": bigint, "source_id": bigint, "items": [...] }`
-* **GET `/api/v1/leads/b2b/{id}`**
-  * **Описание:** Получение полной карточки со вложенными объектами `lead_items` и `change_requests`.
-
-### 3.2. Управление изменениями (Change Requests)
-
-* **POST `/api/v1/change-requests`**
-  * **Описание:** Создание заявки на правку мастер-данных компании для SA/LA.
-  * **Payload:** `{ "entity": "LEAD_B2B", "target_id": bigint, "changes": { "field": {"old": "x", "new": "y"} } }`
-* **PATCH `/api/v1/change-requests/{id}/approve`**
-  * **Описание:** Одобрение супервайзером. Применяет изменения в `client.clients_b2b`.
-
-### 3.3. Активности
-
-* **POST `/api/v1/activities`**
-  * **Описание:** Логирование звонка, встречи или комментария.
-  * **DTO:** `ActivityReportDto`.
+```json
+{
+  "entity": "LEAD_B2B_LPR",
+  "payload": {
+    "lpr_name": "Ахметов Азамат",
+    "contacts": [
+      { "contactTypeId": 1, "value": "+7701XXXXXXX", "isMain": true }
+    ]
+  },
+  "audit": {
+    "old_values": { "lpr_name": "Иванов Иван" }
+  }
+}
+```
 
 ---
 
-## 4. Бизнес-правила
+## 5. REST API Спецификация (DTO)
 
-### 4.1. Алгоритм распределения (Round Robin)
+Формат обмена данными поддерживает коллекцию контактов согласно таблице `client.client_contacts`.
 
-1. **Пул сотрудников:** Система фильтрует `users.users`, где `is_online = true` и роль соответствует сегменту лида (SME Admin / SA Head).
-2. **Выбор:** Назначается сотрудник с самым ранним временем `last_assigned_at`.
-3. **Фиксация:** В поле `assigned_at` таблицы `leads_b2b` записывается текущий timestamp.
+**LeadB2bResponseDto:**
 
-### 4.2. SLA Watchdog
+```json
+{
+  "id": 10245,
+  "leadNumber": "B-202604-088",
+  "companyName": "Kcell JSC",
+  "bin": "980540000397",
+  "lprDetails": {
+    "name": "Ахметов Азамат",
+    "contacts": [
+      {
+        "id": 5540,
+        "contactTypeId": 1,
+        "value": "+7701XXXXXXX",
+        "isMain": true
+      }
+    ]
+  },
+  "status": { "id": 2, "code": "HOT" },
+  "acqManagerId": 884,
+  "isOverdue": false
+}
+```
 
-1. **Триггер:** Переход лида в статус `NEW`.
-2. **Условие:** Если в течение 15 минут с момента `assigned_at` оператор не изменил статус лида на `IN_PROGRESS` или не создал активность.
-3. **Действие:** Установка `is_sla_breached = true` и отправка WebSocket-уведомления Супервайзеру.
+---
 
-### 4.3. Ограничения сегментов SA и LA
+## 6. ER-диаграмма (PlantUML)
 
-* Прямое редактирование `company_name`, `industry_id`, `bin_iin` в таблице `clients_b2b` заблокировано на уровне БД (Trigger) и UI.
-* Изменения возможны только через объект `change_requests`.
+**Фрагмент кода**
+
+```plantuml
+
+```
