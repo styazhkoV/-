@@ -1,0 +1,7575 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "OpenAPI definition",
+    "version": "v0"
+  },
+  "servers": [
+    {
+      "url": "https://api-prod-kcell.sapacrm.kz/client"
+    },
+    {
+      "url": "http://localhost:8080"
+    },
+    {
+
+    }
+  ],
+  "security": [
+    {
+      "bearerAuth": []
+    }
+  ],
+  "tags": [
+    {
+      "name": "Activities",
+      "description": "Управление активностями клиентов"
+    }
+  ],
+  "paths": {
+    "/api/v1/segment": {
+      "get": {
+        "tags": [
+          "Интерфейс для работы с сегментации"
+        ],
+        "summary": "Получить список сегментации",
+        "operationId": "getAllSegments",
+        "responses": {
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExceptionBody"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExceptionBody"
+                }
+              }
+            }
+          },
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Segment"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "Интерфейс для работы с сегментации"
+        ],
+        "summary": "Редактировать сегмент",
+        "operationId": "edit",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Segment"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExceptionBody"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExceptionBody"
+                }
+              }
+            }
+          },
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/Segment"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Интерфейс для работы с сегментации"
+        ],
+        "summary": "Создать сегмент",
+        "operationId": "add",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Segment"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExceptionBody"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExceptionBody"
+                }
+              }
+            }
+          },
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/Segment"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Интерфейс для работы с сегментации"
+        ],
+        "summary": "Удалить сегмент",
+        "operationId": "delete",
+        "parameters": [
+          {
+            "name": "Id",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "responses": {
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExceptionBody"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExceptionBody"
+                }
+              }
+            }
+          },
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/v1/segment/update_filtes": {
+      "post": {
+        "tags": [
+          "Интерфейс для работы с сегментации"
+        ],
+        "summary": "Создать сегмент",
+        "operationId": "updateFilter",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SegmentFilterDto"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExceptionBody"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExceptionBody"
+                }
+              }
+            }
+          },
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/Segment"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/segment/all": {
+      "post": {
+        "tags": [
+          "Интерфейс для работы с сегментации"
+        ],
+        "summary": "Получить список сегментации",
+        "operationId": "all",
+        "parameters": [
+          {
+            "name": "page",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "default": 0
+            }
+          },
+          {
+            "name": "size",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "default": 10
+            }
+          },
+          {
+            "name": "sort",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "default": "id,asc"
+            }
+          }
+        ],
+        "responses": {
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExceptionBody"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExceptionBody"
+                }
+              }
+            }
+          },
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/PageResponseSegment"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/production-calendar": {
+      "post": {
+        "tags": [
+          "production-calendar-controller"
+        ],
+        "operationId": "create",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ProductionCalendarDto"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExceptionBody"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExceptionBody"
+                }
+              }
+            }
+          },
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProductionCalendarDto"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/production-calendar/non-working-days": {
+      "post": {
+        "tags": [
+          "production-calendar-controller"
+        ],
+        "operationId": "getNonWorkingDays",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/NonWorkingDaysRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExceptionBody"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExceptionBody"
+                }
+              }
+            }
+          },
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ProductionCalendarDto"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/marks/contract/{contractId}": {
+      "post": {
+        "tags": [
+          "Интерфейс для работы с маркировками"
+        ],
+        "summary": "Присваиание маркировки контракту",
+        "operationId": "searchContractMark",
+        "parameters": [
+          {
+            "name": "contractId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "default": 0
+            }
+          },
+          {
+            "name": "size",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "default": 10
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/FilterRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExceptionBody"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExceptionBody"
+                }
+              }
+            }
+          },
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/PageResponseClientMarkDto"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/marks/contract/{contractId}/{markId}": {
+      "post": {
+        "tags": [
+          "Интерфейс для работы с маркировками"
+        ],
+        "summary": "Присваиание маркировки контракту",
+        "operationId": "markContract",
+        "parameters": [
+          {
+            "name": "contractId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          },
+          {
+            "name": "markId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "file": {
+                    "type": "string",
+                    "format": "binary"
+                  }
+                },
+                "required": [
+                  "file"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExceptionBody"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExceptionBody"
+                }
+              }
+            }
+          },
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/v1/marks/client/{clientId}/{markId}": {
+      "post": {
+        "tags": [
+          "Интерфейс для работы с маркировками"
+        ],
+        "summary": "Присваиание маркировки клиенту",
+        "operationId": "markClient",
+        "parameters": [
+          {
+            "name": "clientId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          },
+          {
+            "name": "markId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "file": {
+                    "type": "string",
+                    "format": "binary"
+                  }
+                },
+                "required": [
+                  "file"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExceptionBody"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExceptionBody"
+                }
+              }
+            }
+          },
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/v1/kcell_client/{client_id}/authorized-persons": {
+      "post": {
+        "tags": [
+          "Интерфейс для работы с клиентами Kcell"
+        ],
+        "summary": "Добавление доверенного лица для B2B клиента",
+        "description": "Создает новую запись доверенного лица и связывает её с client_id",
+        "operationId": "addAuthorizedPerson",
+        "parameters": [
+          {
+            "name": "client_id",
+            "in": "path",
+            "description": "ID клиента в системе",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            },
+            "example": 150
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AuthorizedPersonRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExceptionBody"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExceptionBody"
+                }
+              }
+            }
+          },
+          "200": {
+            "description": "Лицо успешно добавлено",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/AuthorizedPersonResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Некорректные данные в запросе",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/AuthorizedPersonResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Клиент с таким ID не найден",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/AuthorizedPersonResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/kcell_client/{clientId}/restore": {
+      "post": {
+        "tags": [
+          "Интерфейс для работы с клиентами Kcell"
+        ],
+        "summary": "Восстановление клиента из архива",
+        "description": "Находит ранее удаленного клиента по ID и восстанавливает его и все связанные сущности (адреса, контакты, B2B/B2C данные). Устанавливает поле deleted_at в NULL. Доступно только для ROLE_ADMIN.",
+        "operationId": "restoreDeletedClient",
+        "parameters": [
+          {
+            "name": "clientId",
+            "in": "path",
+            "description": "ID удаленного клиента для восстановления",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            },
+            "example": 456
+          }
+        ],
+        "responses": {
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExceptionBody"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Ошибка доступа: требуется роль ROLE_ADMIN",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExceptionBody"
+                }
+              }
+            }
+          },
+          "200": {
+            "description": "Клиент успешно восстановлен. Возвращает актуальные данные клиента.",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ClientDetailResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Ошибка запроса: клиент уже активен или данные повреждены",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ClientDetailResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Удаленный клиент с таким ID не найден в базе данных",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ClientDetailResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/kcell_client/b2c": {
+      "post": {
+        "tags": [
+          "Интерфейс для работы с клиентами Kcell"
+        ],
+        "summary": "Создание или редактирование B2C клиента",
+        "operationId": "createB2C",
+        "requestBody": {
+          "description": "Данные B2C клиента",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateB2CClientRequest"
+              },
+              "examples": {
+                "Создание B2C клиента": {
+                  "description": "Создание B2C клиента",
+                  "value": {
+                    "id": null,
+                    "binIin": "010101500123",
+                    "fullName": "Иванов Иван Иванович",
+                    "phone": "+77011234567",
+                    "residency": "KZ",
+                    "registrationAddress": "Алматы, ул. Абая 10",
+                    "actualAddressSameAsRegistration": true,
+                    "actualAddress": null,
+                    "secretWord": "ромашка",
+                    "language": "RU",
+                    "email": "ivanov@test.kz",
+                    "otpCode": "1234"
+                  }
+                },
+                "Редактирование B2C клиента": {
+                  "description": "Редактирование B2C клиента",
+                  "value": {
+                    "id": 15,
+                    "binIin": "010101500123",
+                    "fullName": "Иванов Иван Иванович",
+                    "phone": "+77011234567",
+                    "email": "ivanov_new@test.kz"
+                  }
+                }
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExceptionBody"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExceptionBody"
+                }
+              }
+            }
+          },
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ClientDetailResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/kcell_client/b2b": {
+      "post": {
+        "tags": [
+          "Интерфейс для работы с клиентами Kcell"
+        ],
+        "summary": "Создание или редактирование B2B клиента",
+        "operationId": "createB2B",
+        "requestBody": {
+          "description": "Данные B2B клиента",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateB2BClientRequest"
+              },
+              "examples": {
+                "Создание B2B клиента": {
+                  "description": "Создание B2B клиента",
+                  "value": {
+                    "id": null,
+                    "binIin": "123456789012",
+                    "companyName": "TOO Test Company",
+                    "companyPhone": "+77011234567",
+                    "companyEmail": "office@test.kz",
+                    "legalAddress": "Астана, пр. Туран 12",
+                    "actualAddressSameAsLegal": true,
+                    "actualAddress": null,
+                    "contactPersonFullName": "Петров Петр Петрович",
+                    "contactPersonPosition": "Директор",
+                    "contactPersonPhone": "+77017654321",
+                    "otpCode": "1234"
+                  }
+                },
+                "Редактирование B2B клиента": {
+                  "description": "Редактирование B2B клиента",
+                  "value": {
+                    "id": 21,
+                    "binIin": "123456789012",
+                    "companyName": "TOO Updated Company",
+                    "companyEmail": "office_new@test.kz"
+                  }
+                }
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExceptionBody"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExceptionBody"
+                }
+              }
+            }
+          },
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ClientDetailResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/contract/upload_document": {
+      "post": {
+        "tags": [
+          "Интерфейс для работы с контрактами"
+        ],
+        "summary": "Загрузка документа договора",
+        "operationId": "uploadContractDocument",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "fileJson": {
+                    "type": "string"
+                  },
+                  "file": {
+                    "type": "string",
+                    "format": "binary"
+                  }
+                },
+                "required": [
+                  "file",
+                  "fileJson"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExceptionBody"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExceptionBody"
+                }
+              }
+            }
+          },
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/v1/contract/all": {
+      "post": {
+        "tags": [
+          "Интерфейс для работы с контрактами"
+        ],
+        "summary": "Получение списка контрактов по фильтру и с пагинацией",
+        "operationId": "getByContractList",
+        "parameters": [
+          {
+            "name": "page",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "default": 0
+            }
+          },
+          {
+            "name": "size",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "default": 10
+            }
+          },
+          {
+            "name": "sortBy",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "default": "id,asc"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/FilterRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExceptionBody"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExceptionBody"
+                }
+              }
+            }
+          },
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/PageResponseContractDto"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/clients/tasks/list/all": {
+      "post": {
+        "tags": [
+          "Интерфейс для работы с задачами"
+        ],
+        "summary": "Получение списка всех задач",
+        "operationId": "getAllTasks",
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "default": "sdfsdfsdf"
+            }
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "default": 0
+            }
+          },
+          {
+            "name": "size",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "default": 10
+            }
+          },
+          {
+            "name": "sortBy",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "default": "id,asc"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ClientInfoFilter"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExceptionBody"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExceptionBody"
+                }
+              }
+            }
+          },
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/PageResponseClientInfo"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/clients/segment-filter": {
+      "post": {
+        "tags": [
+          "Сегментация"
+        ],
+        "summary": "Получение списка клиентов по фильтрам",
+        "description": "Позволяет фильтровать клиентов по ИИН/БИН, типу и другим условиям. Если список условий пуст или отсутствует, возвращает всех клиентов.",
+        "operationId": "filter",
+        "parameters": [
+          {
+            "name": "page",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "default": 0
+            }
+          },
+          {
+            "name": "size",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "default": 10
+            }
+          },
+          {
+            "name": "sortBy",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "default": "id,desc"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/Condition"
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExceptionBody"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExceptionBody"
+                }
+              }
+            }
+          },
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/PageCampaignClientInfoDto"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/clients/list/my_task": {
+      "post": {
+        "tags": [
+          "Интерфейс для работы с задачами"
+        ],
+        "summary": "Получение списка задач",
+        "operationId": "getClientsMyTask",
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "default": 0
+            }
+          },
+          {
+            "name": "size",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "default": 10
+            }
+          },
+          {
+            "name": "sortBy",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "default": "id,asc"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ClientInfoFilter"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExceptionBody"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExceptionBody"
+                }
+              }
+            }
+          },
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetClientsRs"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/clients/list/history_contract_document": {
+      "post": {
+        "tags": [
+          "Интерфейс для работы с задачами"
+        ],
+        "summary": "Получение истории по документам",
+        "operationId": "getHistoryContractDocument",
+        "parameters": [
+          {
+            "name": "page",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "default": 0
+            }
+          },
+          {
+            "name": "size",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "default": 10
+            }
+          },
+          {
+            "name": "sortBy",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "default": "id,asc"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ContractDocumentFilter"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExceptionBody"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExceptionBody"
+                }
+              }
+            }
+          },
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ContractDocumentDto"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/clients/list/history_communication_result": {
+      "post": {
+        "tags": [
+          "Интерфейс для работы с задачами"
+        ],
+        "summary": "Получение истории по коммуникациям",
+        "operationId": "getHistoryCommunicateResult",
+        "parameters": [
+          {
+            "name": "page",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "default": 0
+            }
+          },
+          {
+            "name": "size",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "default": 10
+            }
+          },
+          {
+            "name": "sortBy",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "default": "id,asc"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CommunicateResultFilter"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExceptionBody"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExceptionBody"
+                }
+              }
+            }
+          },
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/CommunicateResultDto"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/clients/filter/export": {
+      "post": {
+        "tags": [
+          "Сегментация"
+        ],
+        "summary": "Получение списка клиентов с пагинацией",
+        "description": "Поиск работает по номеру телефона (без +7/8), ИИН или имени. Минимальная длина — 3 символа.",
+        "operationId": "exportResult",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/Condition"
+                }
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExceptionBody"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExceptionBody"
+                }
+              }
+            }
+          },
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "string",
+                  "format": "byte"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/clients/contract/update_mark": {
+      "post": {
+        "tags": [
+          "Интерфейс для работы с задачами"
+        ],
+        "summary": "Получение деталей по клиенту",
+        "operationId": "updateMark",
+        "parameters": [
+          {
+            "name": "contractNumber",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/MarkDto"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExceptionBody"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExceptionBody"
+                }
+              }
+            }
+          },
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ContractDto"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/client/uploadContractInfo": {
+      "post": {
+        "tags": [
+          "Импорт и экспорт файлов"
+        ],
+        "summary": "Дополнительные данные по договору, кидать запросы асинхронно по причние; сервис отвечет долго в зависимости от размера файла",
+        "operationId": "uploadContractInfo",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "file": {
+                    "type": "string",
+                    "format": "binary"
+                  }
+                },
+                "required": [
+                  "file"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExceptionBody"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExceptionBody"
+                }
+              }
+            }
+          },
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/v1/client/import-contacts": {
+      "post": {
+        "tags": [
+          "Импорт и экспорт файлов"
+        ],
+        "operationId": "uploadClientContacts",
+        "requestBody": {
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "file": {
+                    "type": "string",
+                    "format": "binary"
+                  }
+                },
+                "required": [
+                  "file"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExceptionBody"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExceptionBody"
+                }
+              }
+            }
+          },
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "integer",
+                  "format": "int32"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/client/addClientByFile": {
+      "post": {
+        "tags": [
+          "Импорт и экспорт файлов"
+        ],
+        "summary": "Загрузка данных по клиентам в формате Excel",
+        "operationId": "addClientByFile",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "file": {
+                    "type": "string",
+                    "format": "binary"
+                  }
+                },
+                "required": [
+                  "file"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExceptionBody"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExceptionBody"
+                }
+              }
+            }
+          },
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/v1/activities": {
+      "post": {
+        "tags": [
+          "Activities"
+        ],
+        "summary": "Создание активности клиента",
+        "operationId": "createActivity",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateActivityRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExceptionBody"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExceptionBody"
+                }
+              }
+            }
+          },
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "integer",
+                  "format": "int64"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/activities/batch": {
+      "post": {
+        "tags": [
+          "Activities"
+        ],
+        "summary": "Пакетное создание активностей",
+        "operationId": "createActivitiesBatch",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateActivityBatchRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExceptionBody"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExceptionBody"
+                }
+              }
+            }
+          },
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "integer",
+                  "format": "int32"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/vyborka/remove-duplicates": {
+      "get": {
+        "tags": [
+          "report-selection-controller"
+        ],
+        "summary": "Процесс удаления дубликатов",
+        "operationId": "init",
+        "responses": {
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExceptionBody"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExceptionBody"
+                }
+              }
+            }
+          },
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/v1/task-dashboard": {
+      "get": {
+        "tags": [
+          "Виджеты"
+        ],
+        "summary": "Получение метрик для Dashboard(виджеты)",
+        "operationId": "getMetrics",
+        "responses": {
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExceptionBody"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExceptionBody"
+                }
+              }
+            }
+          },
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/AnalyticBlock"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/segment/clientsBySegment": {
+      "get": {
+        "tags": [
+          "Интерфейс для работы с сегментации"
+        ],
+        "summary": "Получить список клиентов по сегменту",
+        "operationId": "clientsBySegment",
+        "parameters": [
+          {
+            "name": "segmentId",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          },
+          {
+            "name": "Authorization",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExceptionBody"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExceptionBody"
+                }
+              }
+            }
+          },
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/PageClientInfo"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/schedules/distribution_task/update": {
+      "get": {
+        "tags": [
+          "Расписание компаний"
+        ],
+        "summary": "Запуск обновления задач",
+        "operationId": "updateTasksForCampaign",
+        "responses": {
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExceptionBody"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExceptionBody"
+                }
+              }
+            }
+          },
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/schedules/distribution_task/start": {
+      "get": {
+        "tags": [
+          "Расписание компаний"
+        ],
+        "summary": "Запуск список задач",
+        "operationId": "getAppointmentManagers",
+        "parameters": [
+          {
+            "name": "companyGroupId",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          },
+          {
+            "name": "turn",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "boolean"
+            }
+          }
+        ],
+        "responses": {
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExceptionBody"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExceptionBody"
+                }
+              }
+            }
+          },
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/report": {
+      "get": {
+        "tags": [
+          "Контроллер для получения информаций"
+        ],
+        "summary": "Получение отчета по менеджерам",
+        "operationId": "getReport",
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExceptionBody"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExceptionBody"
+                }
+              }
+            }
+          },
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ManagerReport"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/report/analytics": {
+      "get": {
+        "tags": [
+          "Контроллер для получения информаций"
+        ],
+        "summary": "Получение мои показатели",
+        "operationId": "getAnalytics",
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExceptionBody"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExceptionBody"
+                }
+              }
+            }
+          },
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/AnalyticBlock"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/production-calendar/is-working-day": {
+      "get": {
+        "tags": [
+          "production-calendar-controller"
+        ],
+        "operationId": "isWorkingDay",
+        "parameters": [
+          {
+            "name": "date",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "date"
+            }
+          }
+        ],
+        "responses": {
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExceptionBody"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExceptionBody"
+                }
+              }
+            }
+          },
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "boolean"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/production-calendar/initialize": {
+      "get": {
+        "tags": [
+          "production-calendar-controller"
+        ],
+        "operationId": "initializeCalendar",
+        "responses": {
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExceptionBody"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExceptionBody"
+                }
+              }
+            }
+          },
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/v1/marks/{type}": {
+      "get": {
+        "tags": [
+          "Интерфейс для работы с маркировками"
+        ],
+        "summary": "Получение списка всех маркировок",
+        "operationId": "getAllParentsWithChildren",
+        "parameters": [
+          {
+            "name": "type",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExceptionBody"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExceptionBody"
+                }
+              }
+            }
+          },
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Mark"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/manager-user/transfer": {
+      "get": {
+        "tags": [
+          "Интерфейс для работы с менеджерами"
+        ],
+        "operationId": "getManagerUsersForTransfer",
+        "responses": {
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExceptionBody"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExceptionBody"
+                }
+              }
+            }
+          },
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ManagerUserDto"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/kcell_client/{clientId}": {
+      "get": {
+        "tags": [
+          "Интерфейс для работы с клиентами Kcell"
+        ],
+        "summary": "Получение детальной карточки клиента",
+        "description": "Возвращает полную детализацию карточки клиента по его идентификатору.\n\nНа текущем этапе реализована поддержка только clientType=B2C.\nВ дальнейшем endpoint будет расширен для поддержки B2B без изменения URL.\n\nЧто возвращает для B2C:\n- header профиля клиента;\n- общую информацию;\n- дополнительную информацию;\n- лицевые счета;\n- финансовые показатели;\n- действующие продукты и услуги;\n- договоры и архив документов;\n- специальные предложения.\n\nПараметры:\n- clientId — внутренний идентификатор клиента;\n- clientType — тип клиента. Сейчас поддерживается только B2C.\n\nВозможные ошибки:\n- 404 — клиент не найден;\n- 400 — передан неподдерживаемый clientType.\n",
+        "operationId": "getClient",
+        "parameters": [
+          {
+            "name": "clientId",
+            "in": "path",
+            "description": "Идентификатор клиента",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            },
+            "example": 123
+          },
+          {
+            "name": "clientType",
+            "in": "query",
+            "description": "Тип клиента. На текущем этапе поддерживается только B2C",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "example": "B2C"
+          }
+        ],
+        "responses": {
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExceptionBody"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExceptionBody"
+                }
+              }
+            }
+          },
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ClientDetailResponse"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Интерфейс для работы с клиентами Kcell"
+        ],
+        "summary": "Мягкое удаление клиента (Soft Delete)",
+        "description": "Помечает клиента как удаленного, устанавливая текущую дату в поле deleted_at. Доступно только пользователям с ролью ROLE_ADMIN. После удаления клиент перестает отображаться в обычных списках.",
+        "operationId": "softDeleteClient",
+        "parameters": [
+          {
+            "name": "clientId",
+            "in": "path",
+            "description": "Идентификатор клиента для удаления",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            },
+            "example": 22
+          }
+        ],
+        "responses": {
+          "500": {
+            "description": "Внутренняя ошибка сервера",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExceptionBody"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Доступ запрещен: у пользователя недостаточно прав (нужна ROLE_ADMIN)",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExceptionBody"
+                }
+              }
+            }
+          },
+          "204": {
+            "description": "Клиент успешно помечен как удаленный (No Content)"
+          },
+          "404": {
+            "description": "Клиент с указанным ID не найден"
+          }
+        }
+      }
+    },
+    "/api/v1/kcell_client/{clientId}/pre-delete-check": {
+      "get": {
+        "tags": [
+          "Интерфейс для работы с клиентами Kcell"
+        ],
+        "summary": "Проверка зависимостей перед удалением",
+        "description": "Анализирует финансовый баланс, активные контракты, тикеты и другие связи клиента. Возвращает список предупреждений, если удаление может затронуть активные процессы.",
+        "operationId": "preDeleteCheck",
+        "parameters": [
+          {
+            "name": "clientId",
+            "in": "path",
+            "description": "ID клиента для проверки",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            },
+            "example": 22
+          }
+        ],
+        "responses": {
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExceptionBody"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "У пользователя недостаточно прав (требуется ROLE_ADMIN)",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExceptionBody"
+                }
+              }
+            }
+          },
+          "200": {
+            "description": "Проверка успешно выполнена",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/PreDeleteCheckResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Клиент с таким ID не найден",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/PreDeleteCheckResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/kcell_client/search-by-iin": {
+      "get": {
+        "tags": [
+          "Интерфейс для работы с клиентами Kcell"
+        ],
+        "summary": "Поиск клиента по ИИН (B2C) или БИН (B2B)",
+        "operationId": "searchByIin",
+        "parameters": [
+          {
+            "name": "iin",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExceptionBody"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExceptionBody"
+                }
+              }
+            }
+          },
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": {
+
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/kcell_client/search-by-contact": {
+      "get": {
+        "tags": [
+          "Интерфейс для работы с клиентами Kcell"
+        ],
+        "summary": "Поиск клиента по контактным данным (PHONE, EMAIL, WHATSAPP)",
+        "operationId": "searchByContact",
+        "parameters": [
+          {
+            "name": "contactType",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "value",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExceptionBody"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExceptionBody"
+                }
+              }
+            }
+          },
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": {
+
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/kcell_client/filter": {
+      "get": {
+        "tags": [
+          "Интерфейс для работы с клиентами Kcell"
+        ],
+        "summary": "Получения списка клиентов с пагинацией",
+        "operationId": "filter_1",
+        "parameters": [
+          {
+            "name": "page",
+            "in": "query",
+            "description": "Номер страницы (начиная с 0)",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "default": 0
+            }
+          },
+          {
+            "name": "size",
+            "in": "query",
+            "description": "Количество записей на странице",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "default": 10
+            }
+          },
+          {
+            "name": "searchString",
+            "in": "query",
+            "description": "Строка поиска (телефон, ИИН или ФИО)",
+            "required": false,
+            "schema": {
+              "type": "string"
+            },
+            "example": 7012223344
+          }
+        ],
+        "responses": {
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExceptionBody"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExceptionBody"
+                }
+              }
+            }
+          },
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/PageResponseKcellClientInfoDto"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/contract/variables/{contractId}": {
+      "get": {
+        "tags": [
+          "Интерфейс для работы с контрактами"
+        ],
+        "operationId": "getTemplateVariables",
+        "parameters": [
+          {
+            "name": "contractId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "responses": {
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExceptionBody"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExceptionBody"
+                }
+              }
+            }
+          },
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/TemplateKeyDto"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/contract/id": {
+      "get": {
+        "tags": [
+          "Интерфейс для работы с контрактами"
+        ],
+        "summary": "Получение данных контракта по id",
+        "operationId": "getByContractId",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          },
+          {
+            "name": "Authorization",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "default": "sdfsdfsdf"
+            }
+          }
+        ],
+        "responses": {
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExceptionBody"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExceptionBody"
+                }
+              }
+            }
+          },
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/SegmentClientDto"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/contract/contract_variables/{contractId}": {
+      "get": {
+        "tags": [
+          "Интерфейс для работы с контрактами"
+        ],
+        "operationId": "getContractVariables",
+        "parameters": [
+          {
+            "name": "contractId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "responses": {
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExceptionBody"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExceptionBody"
+                }
+              }
+            }
+          },
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": {
+
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/contract/contract-number": {
+      "get": {
+        "tags": [
+          "Интерфейс для работы с контрактами"
+        ],
+        "summary": "Получение данных контракта по номеру контракта",
+        "operationId": "getByContractNumber",
+        "parameters": [
+          {
+            "name": "contractNumber",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExceptionBody"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExceptionBody"
+                }
+              }
+            }
+          },
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ContractDto"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/clients/task/re-assign/{taskId}/{username}": {
+      "get": {
+        "tags": [
+          "Интерфейс для работы с задачами"
+        ],
+        "summary": "Переназначение задачи другому менеджеру",
+        "operationId": "reAssignTask",
+        "parameters": [
+          {
+            "name": "taskId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          },
+          {
+            "name": "username",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExceptionBody"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExceptionBody"
+                }
+              }
+            }
+          },
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/v1/clients/my-tasks/{clientId}": {
+      "get": {
+        "tags": [
+          "Интерфейс для работы с задачами"
+        ],
+        "summary": "Получение деталей по клиенту",
+        "operationId": "getSegmentClientData",
+        "parameters": [
+          {
+            "name": "clientId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          },
+          {
+            "name": "task_number",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "Authorization",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "default": "sdfsdfsdf"
+            }
+          }
+        ],
+        "responses": {
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExceptionBody"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExceptionBody"
+                }
+              }
+            }
+          },
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/SegmentClientDto"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/clients/filter/dropdowns/{field}": {
+      "get": {
+        "tags": [
+          "Сегментация"
+        ],
+        "summary": "Получение результата по каналу",
+        "operationId": "dropDown",
+        "parameters": [
+          {
+            "name": "field",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExceptionBody"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExceptionBody"
+                }
+              }
+            }
+          },
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/clients/fields": {
+      "get": {
+        "tags": [
+          "Сегментация"
+        ],
+        "summary": "Доступные поля для cегментации",
+        "operationId": "getFields",
+        "responses": {
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExceptionBody"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExceptionBody"
+                }
+              }
+            }
+          },
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/clients/fields/{field}": {
+      "get": {
+        "tags": [
+          "Сегментация"
+        ],
+        "summary": "Доступные условия для полей сегментации",
+        "operationId": "getConditionsByField",
+        "parameters": [
+          {
+            "name": "field",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExceptionBody"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExceptionBody"
+                }
+              }
+            }
+          },
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/clients/contacts/{id}": {
+      "get": {
+        "tags": [
+          "Взаимодействия внутри микросервисов"
+        ],
+        "summary": "Получение контакта по id",
+        "operationId": "getContactById",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "responses": {
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExceptionBody"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExceptionBody"
+                }
+              }
+            }
+          },
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetContactByIdRs"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/client/files": {
+      "get": {
+        "tags": [
+          "Импорт и экспорт файлов"
+        ],
+        "summary": "Получить список загруженных файлов",
+        "operationId": "files",
+        "responses": {
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExceptionBody"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExceptionBody"
+                }
+              }
+            }
+          },
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/UploadHistory"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/activities/report": {
+      "get": {
+        "tags": [
+          "Activities"
+        ],
+        "summary": "Отчёт по активностям",
+        "description": "Для рассылок используйте activityType=MAILING",
+        "operationId": "getReport_1",
+        "parameters": [
+          {
+            "name": "activityType",
+            "in": "query",
+            "description": "Тип активности (MAILING, CALL и др.)",
+            "required": false,
+            "schema": {
+              "type": "string"
+            },
+            "example": "MAILING"
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "description": "Номер страницы",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "default": 0
+            }
+          },
+          {
+            "name": "size",
+            "in": "query",
+            "description": "Размер страницы",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "default": 20
+            }
+          }
+        ],
+        "responses": {
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExceptionBody"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExceptionBody"
+                }
+              }
+            }
+          },
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/PageActivityReportDto"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/production-calendar/{id}": {
+      "delete": {
+        "tags": [
+          "production-calendar-controller"
+        ],
+        "operationId": "delete_1",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "responses": {
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExceptionBody"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExceptionBody"
+                }
+              }
+            }
+          },
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/v1/marks/contract/inactive/{clientId}": {
+      "delete": {
+        "tags": [
+          "Интерфейс для работы с маркировками"
+        ],
+        "summary": "Удаление маркировки договора",
+        "operationId": "inactiveContractMark",
+        "parameters": [
+          {
+            "name": "clientId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "responses": {
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExceptionBody"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExceptionBody"
+                }
+              }
+            }
+          },
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/v1/client/byFileId/{id}": {
+      "delete": {
+        "tags": [
+          "Импорт и экспорт файлов"
+        ],
+        "summary": "Удалить загруженный данные по файлу",
+        "operationId": "deleteByFileId",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "responses": {
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExceptionBody"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExceptionBody"
+                }
+              }
+            }
+          },
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "ExceptionBody": {
+        "type": "object",
+        "properties": {
+          "message": {
+            "type": "string"
+          }
+        }
+      },
+      "Condition": {
+        "type": "object",
+        "properties": {
+          "condition": {
+            "type": "string",
+            "enum": [
+              "notEqual",
+              "greaterThan",
+              "lessThan",
+              "equal",
+              "contains",
+              "notContains",
+              "greaterThanOrEqual",
+              "lessThanOrEqual",
+              "exclude",
+              "in"
+            ]
+          },
+          "field": {
+            "type": "string"
+          },
+          "value": {
+            "type": "string"
+          },
+          "priority": {
+            "type": "string"
+          },
+          "sort": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/SortField"
+            }
+          },
+          "logicalConditions": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/LogicalCondition"
+            }
+          }
+        }
+      },
+      "LogicalCondition": {
+        "type": "object",
+        "properties": {
+          "logic": {
+            "type": "string",
+            "enum": [
+              "OR",
+              "AND"
+            ]
+          },
+          "condition": {
+            "$ref": "#/components/schemas/Condition"
+          }
+        }
+      },
+      "Segment": {
+        "type": "object",
+        "properties": {
+          "createdBy": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "updatedBy": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "deletedAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "id": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "editDate": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "name": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "conditions": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Condition"
+            }
+          },
+          "collection": {
+            "type": "string"
+          },
+          "depId": {
+            "type": "string"
+          },
+          "srvDepCode": {
+            "type": "string"
+          }
+        }
+      },
+      "SortField": {
+        "type": "object",
+        "properties": {
+          "field": {
+            "type": "string"
+          },
+          "value": {
+            "type": "string",
+            "enum": [
+              "ASC",
+              "DESC",
+              "ASC_ALPHA",
+              "DESC_ALPHA"
+            ]
+          }
+        }
+      },
+      "SegmentFilterDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "conditions": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Condition"
+            }
+          }
+        }
+      },
+      "PageResponseSegment": {
+        "type": "object",
+        "properties": {
+          "content": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Segment"
+            }
+          },
+          "totalElements": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "totalPages": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "page": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "lastPage": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "size": {
+            "type": "integer",
+            "format": "int32"
+          }
+        }
+      },
+      "ProductionCalendarDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "date": {
+            "type": "string",
+            "format": "date"
+          },
+          "isHoliday": {
+            "type": "boolean"
+          },
+          "isWeekend": {
+            "type": "boolean"
+          }
+        }
+      },
+      "NonWorkingDaysRequest": {
+        "type": "object",
+        "properties": {
+          "startDate": {
+            "type": "string",
+            "format": "date"
+          },
+          "endDate": {
+            "type": "string",
+            "format": "date"
+          }
+        }
+      },
+      "FilterRequest": {
+        "type": "object",
+        "properties": {
+          "filters": {
+            "type": "object",
+            "additionalProperties": {
+
+            }
+          }
+        }
+      },
+      "ClientMarkDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "markId": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "mark": {
+            "type": "string"
+          },
+          "parentMark": {
+            "type": "string"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "createdByFio": {
+            "type": "string"
+          },
+          "fileId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "fileMimeType": {
+            "type": "string"
+          },
+          "status": {
+            "type": "string"
+          },
+          "contractNumber": {
+            "type": "string"
+          }
+        }
+      },
+      "PageResponseClientMarkDto": {
+        "type": "object",
+        "properties": {
+          "content": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ClientMarkDto"
+            }
+          },
+          "totalElements": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "totalPages": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "page": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "lastPage": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "size": {
+            "type": "integer",
+            "format": "int32"
+          }
+        }
+      },
+      "AuthorizedPersonRequest": {
+        "type": "object",
+        "description": "Запрос на создание/добавление доверенного лица или контактного лица",
+        "properties": {
+          "lastName": {
+            "type": "string",
+            "description": "Фамилия",
+            "example": "Иванов"
+          },
+          "firstName": {
+            "type": "string",
+            "description": "Имя",
+            "example": "Иван"
+          },
+          "middleName": {
+            "type": "string",
+            "description": "Отчество",
+            "example": "Иванович"
+          },
+          "iin": {
+            "type": "string",
+            "description": "ИИН (12 цифр)",
+            "example": 950525300123,
+            "maxLength": 12
+          },
+          "phone": {
+            "type": "string",
+            "description": "Номер телефона",
+            "example": "+77011112233"
+          },
+          "email": {
+            "type": "string",
+            "description": "Электронная почта",
+            "example": "ivanov@mail.kz"
+          },
+          "authorityDescription": {
+            "type": "string",
+            "description": "Полномочие/Должность",
+            "example": "Директор по развитию"
+          },
+          "birthDate": {
+            "type": "string",
+            "description": "Дата рождения",
+            "example": "1995-05-25"
+          },
+          "residency": {
+            "type": "boolean",
+            "description": "Признак резидентства (true - резидент, false - нерезидент)",
+            "example": true
+          },
+          "codeWord": {
+            "type": "string",
+            "description": "Кодовое слово для идентификации",
+            "example": "Астана2024"
+          },
+          "city": {
+            "type": "string",
+            "description": "Город проживания",
+            "example": "Алматы"
+          },
+          "region": {
+            "type": "string",
+            "description": "Регион",
+            "example": "Алматинская область"
+          },
+          "address": {
+            "type": "string",
+            "description": "Адрес проживания",
+            "example": "ул. Абая 10, кв 5"
+          },
+          "doNotDisturb": {
+            "type": "boolean",
+            "description": "Флаг 'Не беспокоить'",
+            "example": false
+          },
+          "documentPath": {
+            "type": "string",
+            "description": "Путь к файлу документа в хранилище",
+            "example": "/documents/2024/doc1.pdf"
+          },
+          "documentName": {
+            "type": "string",
+            "description": "Оригинальное имя файла",
+            "example": "id_card_scan.pdf"
+          },
+          "gender": {
+            "type": "string",
+            "description": "Пол",
+            "enum": [
+              "M",
+              "F"
+            ],
+            "example": "M"
+          },
+          "contactType": {
+            "type": "string",
+            "description": "Тип контакта",
+            "enum": [
+              "CONTACT",
+              "AUTHORIZED_PERSON"
+            ],
+            "example": "AUTHORIZED_PERSON"
+          },
+          "serviceLanguage": {
+            "type": "string",
+            "description": "Язык обслуживания",
+            "enum": [
+              "EN",
+              "RU",
+              "KZ"
+            ],
+            "example": "RU"
+          }
+        },
+        "required": [
+          "firstName",
+          "lastName"
+        ]
+      },
+      "AuthorizedPersonResponse": {
+        "type": "object",
+        "description": "Ответ при успешном добавлении доверенного или контактного лица",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int64",
+            "description": "Уникальный ID созданной записи",
+            "example": 552
+          },
+          "clientId": {
+            "type": "integer",
+            "format": "int64",
+            "description": "ID клиента, к которому привязано лицо",
+            "example": 150
+          },
+          "isActive": {
+            "type": "boolean",
+            "description": "Статус активности записи",
+            "example": true
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time",
+            "description": "Дата и время создания записи",
+            "example": "2024-05-20T10:15:30Z"
+          },
+          "contactType": {
+            "type": "string",
+            "description": "Тип добавленного лица",
+            "enum": [
+              "CONTACT",
+              "AUTHORIZED_PERSON"
+            ],
+            "example": "AUTHORIZED_PERSON"
+          }
+        }
+      },
+      "ActiveNumberDTO": {
+        "type": "object",
+        "properties": {
+          "phoneNumber": {
+            "type": "string"
+          },
+          "brand": {
+            "type": "string"
+          },
+          "status": {
+            "type": "string"
+          },
+          "role": {
+            "type": "string"
+          }
+        }
+      },
+      "AdditionalInfo": {
+        "type": "object",
+        "properties": {
+          "address": {
+            "$ref": "#/components/schemas/AddressDto"
+          },
+          "incomeInfo": {
+            "$ref": "#/components/schemas/IncomeInfo"
+          },
+          "bankRequisites": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/BankRequisitesDto"
+            }
+          },
+          "clientRestrictions": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ClientRestrictionsDto"
+            }
+          },
+          "activeNumbers": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ActiveNumberDTO"
+            }
+          }
+        }
+      },
+      "AddressDto": {
+        "type": "object",
+        "properties": {
+          "registrationAddress": {
+            "type": "string"
+          },
+          "actualAddress": {
+            "type": "string"
+          }
+        }
+      },
+      "AttachmentDTO": {
+        "type": "object",
+        "properties": {
+          "fileUrl": {
+            "type": "string"
+          },
+          "fileSize": {
+            "type": "string"
+          },
+          "uploadedAt": {
+            "type": "string"
+          },
+          "uploadedBy": {
+            "type": "string"
+          }
+        }
+      },
+      "B2BAccountDTO": {
+        "type": "object",
+        "properties": {
+          "accountNumber": {
+            "type": "string"
+          },
+          "balance": {
+            "type": "number"
+          },
+          "accrued": {
+            "type": "number"
+          },
+          "remaining": {
+            "type": "number"
+          }
+        }
+      },
+      "B2BAddresses": {
+        "type": "object",
+        "properties": {
+          "legalAddress": {
+            "type": "string"
+          },
+          "actualAddress": {
+            "type": "string"
+          }
+        }
+      },
+      "B2BCommunication": {
+        "type": "object",
+        "properties": {
+          "email": {
+            "type": "string"
+          }
+        }
+      },
+      "B2BContactDTO": {
+        "type": "object",
+        "properties": {
+          "contactId": {
+            "type": "string"
+          },
+          "fullName": {
+            "type": "string"
+          },
+          "position": {
+            "type": "string"
+          },
+          "role": {
+            "type": "string"
+          },
+          "phone": {
+            "type": "string"
+          },
+          "email": {
+            "type": "string"
+          },
+          "contactType": {
+            "type": "string"
+          },
+          "contactCard": {
+            "$ref": "#/components/schemas/ContactCardDTO"
+          }
+        }
+      },
+      "B2BContractRelationsDTO": {
+        "type": "object",
+        "properties": {
+          "parentContract": {
+            "type": "string"
+          },
+          "relatedContracts": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "B2BContractsAndDocuments": {
+        "type": "object",
+        "properties": {
+          "contracts": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ContractDTO"
+            }
+          },
+          "financialInformation": {
+            "$ref": "#/components/schemas/FinancialInformationDTO"
+          },
+          "servicesOrProducts": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ServiceOrProductDTO"
+            }
+          },
+          "contractRelations": {
+            "$ref": "#/components/schemas/B2BContractRelationsDTO"
+          },
+          "attachments": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/AttachmentDTO"
+            }
+          },
+          "powersOfAttorney": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/PowerOfAttorneyDTO"
+            }
+          },
+          "documentArchive": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/DocumentArchiveDTO"
+            }
+          }
+        }
+      },
+      "B2BGeneralInfo": {
+        "type": "object",
+        "properties": {
+          "mainInfo": {
+            "$ref": "#/components/schemas/B2BMainInfo"
+          },
+          "responsibleEmployees": {
+            "$ref": "#/components/schemas/ResponsibleEmployees"
+          },
+          "subsidiaries": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/SubsidiaryDTO"
+            }
+          },
+          "bankRequisites": {
+            "$ref": "#/components/schemas/BankRequisitesDto"
+          },
+          "restrictions": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ClientRestrictionsDto"
+            }
+          },
+          "addresses": {
+            "$ref": "#/components/schemas/B2BAddresses"
+          },
+          "communication": {
+            "$ref": "#/components/schemas/B2BCommunication"
+          }
+        }
+      },
+      "B2BHeaderInfo": {
+        "type": "object",
+        "properties": {
+          "companyLogo": {
+            "type": "string"
+          },
+          "companyName": {
+            "type": "string"
+          },
+          "bin": {
+            "type": "string"
+          },
+          "clientCategory": {
+            "type": "string"
+          },
+          "hasCorporateCabinet": {
+            "type": "boolean"
+          },
+          "hasMobileApp": {
+            "type": "boolean"
+          },
+          "canEdit": {
+            "type": "boolean"
+          }
+        }
+      },
+      "B2BMainInfo": {
+        "type": "object",
+        "properties": {
+          "bin": {
+            "type": "string"
+          },
+          "companyName": {
+            "type": "string"
+          },
+          "legalForm": {
+            "type": "string"
+          },
+          "residentStatus": {
+            "type": "boolean"
+          },
+          "mainPhone": {
+            "type": "string"
+          },
+          "communicationMethod": {
+            "type": "string"
+          }
+        }
+      },
+      "B2BNumbersSummary": {
+        "type": "object",
+        "properties": {
+          "activeNumbers": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "inactiveNumbers": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "brand": {
+            "type": "string",
+            "enum": [
+              "Activ",
+              "Kcell"
+            ]
+          }
+        }
+      },
+      "B2BNumbersTableDTO": {
+        "type": "object",
+        "properties": {
+          "phoneNumber": {
+            "type": "string"
+          },
+          "brand": {
+            "type": "string"
+          },
+          "status": {
+            "type": "string"
+          },
+          "personalAccount": {
+            "type": "string"
+          }
+        }
+      },
+      "B2BRequirements": {
+        "type": "object",
+        "properties": {
+          "notes": {
+            "type": "string"
+          },
+          "attachments": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/AttachmentDTO"
+            }
+          }
+        }
+      },
+      "B2BSpecificInfo": {
+        "type": "object",
+        "properties": {
+          "contactList": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/B2BContactDTO"
+            }
+          },
+          "activities": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ClientActivityDTO"
+            }
+          },
+          "requirements": {
+            "$ref": "#/components/schemas/B2BRequirements"
+          }
+        }
+      },
+      "B2CGeneralInfo": {
+        "type": "object",
+        "properties": {
+          "mainInfo": {
+            "$ref": "#/components/schemas/MainInfoB2C"
+          },
+          "personalData": {
+            "$ref": "#/components/schemas/PersonalData"
+          },
+          "passportData": {
+            "$ref": "#/components/schemas/PassportData"
+          },
+          "securityData": {
+            "$ref": "#/components/schemas/SecurityData"
+          },
+          "interactionHistory": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/InteractionHistoryDTO"
+            }
+          }
+        }
+      },
+      "B2CHeaderInfo": {
+        "type": "object",
+        "properties": {
+          "fullName": {
+            "type": "string"
+          },
+          "segment": {
+            "type": "string"
+          },
+          "hasMobileApp": {
+            "type": "boolean"
+          },
+          "language": {
+            "type": "string"
+          },
+          "canEdit": {
+            "type": "boolean"
+          },
+          "email": {
+            "type": "string"
+          }
+        }
+      },
+      "BalanceDTO": {
+        "type": "object",
+        "properties": {
+          "amount": {
+            "type": "number"
+          },
+          "accountNumber": {
+            "type": "string"
+          }
+        }
+      },
+      "BankRequisitesDto": {
+        "type": "object",
+        "properties": {
+          "bankName": {
+            "type": "string"
+          },
+          "iban": {
+            "type": "string"
+          },
+          "bik": {
+            "type": "string"
+          },
+          "accountOwner": {
+            "type": "string"
+          }
+        }
+      },
+      "CareerHistoryDTO": {
+        "type": "object",
+        "properties": {
+          "companyName": {
+            "type": "string"
+          },
+          "position": {
+            "type": "string"
+          },
+          "startDate": {
+            "type": "string"
+          },
+          "endDate": {
+            "type": "string"
+          }
+        }
+      },
+      "ClientActivityDTO": {
+        "type": "object",
+        "properties": {
+          "activityId": {
+            "type": "string"
+          },
+          "activityType": {
+            "type": "string"
+          },
+          "subject": {
+            "type": "string"
+          },
+          "source": {
+            "type": "string"
+          },
+          "sourceId": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "createdAt": {
+            "type": "string"
+          },
+          "createdBy": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          }
+        }
+      },
+      "ClientB2BDto": {
+        "type": "object",
+        "properties": {
+          "b2bHeader": {
+            "$ref": "#/components/schemas/B2BHeaderInfo"
+          },
+          "b2bGeneralInfo": {
+            "$ref": "#/components/schemas/B2BGeneralInfo"
+          },
+          "additionalInfo": {
+            "$ref": "#/components/schemas/AdditionalInfo"
+          },
+          "personalAccounts": {
+            "$ref": "#/components/schemas/PersonalAccounts"
+          },
+          "contactsAndTrustedParties": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ContactsAndTrustedPartiesDto"
+            }
+          },
+          "financialMetrics": {
+            "$ref": "#/components/schemas/FinancialMetrics"
+          },
+          "products": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ClientProductDTO"
+            }
+          },
+          "contractsAndDocuments": {
+            "$ref": "#/components/schemas/B2BContractsAndDocuments"
+          },
+          "specialOffers": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/SpecialOfferDTO"
+            }
+          },
+          "activities": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ClientActivityDTO"
+            }
+          },
+          "b2bSpecific": {
+            "$ref": "#/components/schemas/B2BSpecificInfo"
+          }
+        }
+      },
+      "ClientB2CDto": {
+        "type": "object",
+        "properties": {
+          "b2cHeader": {
+            "$ref": "#/components/schemas/B2CHeaderInfo"
+          },
+          "b2cGeneralInfo": {
+            "$ref": "#/components/schemas/B2CGeneralInfo"
+          },
+          "additionalInfo": {
+            "$ref": "#/components/schemas/AdditionalInfo"
+          },
+          "personalAccounts": {
+            "$ref": "#/components/schemas/PersonalAccounts"
+          },
+          "productsAndServices": {
+            "$ref": "#/components/schemas/ProductsAndServicesDTO"
+          },
+          "contractsAndDocuments": {
+            "$ref": "#/components/schemas/ContractsAndDocuments"
+          },
+          "contractMainInformation": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ContractMainInformation"
+            }
+          },
+          "financialInformations": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/FinancialInformation"
+            }
+          },
+          "attachments": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/AttachmentDTO"
+            }
+          },
+          "relatedDocuments": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/AttachmentDTO"
+            }
+          },
+          "powersOfAttorney": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/PowerOfAttorneyDTO"
+            }
+          },
+          "documentArchive": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/DocumentArchiveDTO"
+            }
+          },
+          "specialOffers": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/SpecialOfferDTO"
+            }
+          },
+          "activities": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ClientActivityDTO"
+            }
+          }
+        }
+      },
+      "ClientDetailResponse": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "clientB2C": {
+            "$ref": "#/components/schemas/ClientB2CDto"
+          },
+          "clientB2B": {
+            "$ref": "#/components/schemas/ClientB2BDto"
+          }
+        }
+      },
+      "ClientProductDTO": {
+        "type": "object",
+        "properties": {
+          "number": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "productId": {
+            "type": "string"
+          },
+          "product": {
+            "type": "string"
+          },
+          "type": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "status": {
+            "type": "string"
+          }
+        }
+      },
+      "ClientRestrictionsDto": {
+        "type": "object",
+        "properties": {
+          "restrictionType": {
+            "type": "string"
+          },
+          "restrictionDescription": {
+            "type": "string"
+          },
+          "restrictionStatus": {
+            "type": "string"
+          },
+          "startDate": {
+            "type": "string"
+          },
+          "endDate": {
+            "type": "string"
+          }
+        }
+      },
+      "ContactCardDTO": {
+        "type": "object",
+        "properties": {
+          "counterparty": {
+            "type": "string"
+          },
+          "clientType": {
+            "type": "string"
+          },
+          "position": {
+            "type": "string"
+          },
+          "role": {
+            "type": "string"
+          },
+          "contactType": {
+            "type": "string"
+          },
+          "phones": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ContactPhoneDTO"
+            }
+          },
+          "emails": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ContactEmailDTO"
+            }
+          },
+          "iin": {
+            "type": "string"
+          },
+          "gender": {
+            "type": "string",
+            "enum": [
+              "M",
+              "F"
+            ]
+          },
+          "birthDate": {
+            "type": "string"
+          },
+          "residentStatus": {
+            "type": "boolean"
+          },
+          "verificationWord": {
+            "type": "string"
+          },
+          "verificationPassword": {
+            "type": "string"
+          },
+          "serviceLanguage": {
+            "type": "string",
+            "enum": [
+              "KZ",
+              "RU",
+              "EN"
+            ]
+          },
+          "city": {
+            "type": "string"
+          },
+          "region": {
+            "type": "string"
+          },
+          "address": {
+            "type": "string"
+          },
+          "doNotDisturb": {
+            "type": "boolean"
+          },
+          "documentType": {
+            "type": "string"
+          },
+          "issuedBy": {
+            "type": "string"
+          },
+          "expirationDate": {
+            "type": "string"
+          },
+          "documentPath": {
+            "type": "string"
+          },
+          "documentName": {
+            "type": "string"
+          },
+          "careerHistory": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/CareerHistoryDTO"
+            }
+          }
+        }
+      },
+      "ContactEmailDTO": {
+        "type": "object",
+        "properties": {
+          "email": {
+            "type": "string"
+          }
+        }
+      },
+      "ContactPhoneDTO": {
+        "type": "object",
+        "properties": {
+          "phone": {
+            "type": "string"
+          }
+        }
+      },
+      "ContactsAndTrustedPartiesDto": {
+        "type": "object",
+        "properties": {
+          "contactPersonFullName": {
+            "type": "string"
+          },
+          "contactPersonPosition": {
+            "type": "string"
+          },
+          "contactPersonRole": {
+            "type": "string"
+          },
+          "contactPersonIsActive": {
+            "type": "boolean"
+          },
+          "contactPersonPhone": {
+            "type": "string"
+          },
+          "contactPersonEmail": {
+            "type": "string"
+          },
+          "contactPersonType": {
+            "type": "string"
+          },
+          "contactCard": {
+            "$ref": "#/components/schemas/ContactCardDTO"
+          }
+        }
+      },
+      "ContractDTO": {
+        "type": "object",
+        "properties": {
+          "contractId": {
+            "type": "string"
+          },
+          "contractNumber": {
+            "type": "string"
+          },
+          "type": {
+            "type": "string"
+          },
+          "products": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "startDate": {
+            "type": "string"
+          },
+          "endDate": {
+            "type": "string"
+          },
+          "status": {
+            "type": "string"
+          },
+          "personalAccountNumber": {
+            "type": "string"
+          },
+          "monthlyFee": {
+            "type": "number"
+          },
+          "contractMainInformation": {
+            "$ref": "#/components/schemas/ContractMainInformationDTO"
+          }
+        }
+      },
+      "ContractMainInformation": {
+        "type": "object",
+        "properties": {
+          "registrationNumber": {
+            "type": "string"
+          },
+          "contractType": {
+            "type": "string"
+          },
+          "startDate": {
+            "type": "string"
+          },
+          "endDate": {
+            "type": "string"
+          },
+          "responsibleKcell": {
+            "type": "string"
+          },
+          "clientRepresentative": {
+            "type": "string"
+          }
+        }
+      },
+      "ContractMainInformationDTO": {
+        "type": "object",
+        "properties": {
+          "registrationNumber": {
+            "type": "string"
+          },
+          "contractType": {
+            "type": "string"
+          },
+          "startDate": {
+            "type": "string"
+          },
+          "endDate": {
+            "type": "string"
+          },
+          "responsibleKcell": {
+            "type": "string"
+          },
+          "clientRepresentative": {
+            "type": "string"
+          }
+        }
+      },
+      "ContractsAndDocuments": {
+        "type": "object",
+        "properties": {
+          "addContractAllowed": {
+            "type": "boolean"
+          },
+          "contracts": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ContractDTO"
+            }
+          }
+        }
+      },
+      "DocumentArchiveDTO": {
+        "type": "object",
+        "properties": {
+          "documentNumber": {
+            "type": "string"
+          },
+          "documentType": {
+            "type": "string"
+          },
+          "startDate": {
+            "type": "string"
+          },
+          "endDate": {
+            "type": "string"
+          },
+          "status": {
+            "type": "string"
+          }
+        }
+      },
+      "FinancialInformation": {
+        "type": "object",
+        "properties": {
+          "paymentForm": {
+            "type": "string"
+          },
+          "currency": {
+            "type": "string"
+          },
+          "monthlyFee": {
+            "type": "number"
+          },
+          "monthlyPayment": {
+            "type": "number"
+          },
+          "oneTimePayment": {
+            "type": "number"
+          },
+          "discount": {
+            "type": "number"
+          },
+          "residualCost": {
+            "type": "number"
+          },
+          "debtorStatus": {
+            "type": "boolean"
+          }
+        }
+      },
+      "FinancialInformationDTO": {
+        "type": "object",
+        "properties": {
+          "paymentForm": {
+            "type": "string"
+          },
+          "currency": {
+            "type": "string"
+          },
+          "monthlyFee": {
+            "type": "number"
+          },
+          "oneTimePayment": {
+            "type": "number"
+          },
+          "discount": {
+            "type": "number"
+          },
+          "residualCost": {
+            "type": "number"
+          },
+          "debtorStatus": {
+            "type": "boolean"
+          }
+        }
+      },
+      "FinancialMetrics": {
+        "type": "object",
+        "properties": {
+          "creditLimit": {
+            "type": "number"
+          },
+          "remainingLimit": {
+            "type": "number"
+          },
+          "debtAmount": {
+            "type": "number"
+          },
+          "debtProgressPercent": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "limitIncreaseAvailable": {
+            "type": "boolean"
+          }
+        }
+      },
+      "IncomeInfo": {
+        "type": "object",
+        "properties": {
+          "incomeAmount": {
+            "type": "number"
+          },
+          "incomeSource": {
+            "type": "string"
+          }
+        }
+      },
+      "InteractionHistoryDTO": {
+        "type": "object",
+        "properties": {
+          "number": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "interactionType": {
+            "type": "string"
+          },
+          "channel": {
+            "type": "string"
+          },
+          "phoneNumber": {
+            "type": "string"
+          },
+          "employee": {
+            "type": "string"
+          },
+          "employeeDepartment": {
+            "type": "string"
+          },
+          "topic": {
+            "type": "string"
+          }
+        }
+      },
+      "MainInfoB2C": {
+        "type": "object",
+        "properties": {
+          "iin": {
+            "type": "string"
+          },
+          "clientType": {
+            "type": "string"
+          },
+          "phoneNumber": {
+            "type": "string"
+          },
+          "city": {
+            "type": "string"
+          }
+        }
+      },
+      "PassportData": {
+        "type": "object",
+        "properties": {
+          "documentType": {
+            "type": "string"
+          },
+          "documentNumber": {
+            "type": "string"
+          },
+          "expirationDate": {
+            "type": "string"
+          },
+          "issuedBy": {
+            "type": "string"
+          }
+        }
+      },
+      "PersonalAccounts": {
+        "type": "object",
+        "properties": {
+          "balance": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/BalanceDTO"
+            }
+          },
+          "transactions": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/TransactionDTO"
+            }
+          },
+          "b2bAccounts": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/B2BAccountDTO"
+            }
+          },
+          "numbersSummary": {
+            "$ref": "#/components/schemas/B2BNumbersSummary"
+          },
+          "numbersTable": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/B2BNumbersTableDTO"
+            }
+          }
+        }
+      },
+      "PersonalData": {
+        "type": "object",
+        "properties": {
+          "birthDate": {
+            "type": "string"
+          },
+          "gender": {
+            "type": "string"
+          },
+          "maritalStatus": {
+            "type": "string"
+          },
+          "isResident": {
+            "type": "boolean"
+          }
+        }
+      },
+      "PowerOfAttorneyDTO": {
+        "type": "object",
+        "properties": {
+          "poaId": {
+            "type": "string"
+          },
+          "number": {
+            "type": "string"
+          },
+          "fullName": {
+            "type": "string"
+          },
+          "startDate": {
+            "type": "string"
+          },
+          "endDate": {
+            "type": "string"
+          },
+          "status": {
+            "type": "string"
+          },
+          "expiryNotification": {
+            "type": "boolean"
+          },
+          "fileUrl": {
+            "type": "string"
+          },
+          "fileName": {
+            "type": "string"
+          }
+        }
+      },
+      "ProductsAndServicesDTO": {
+        "type": "object",
+        "properties": {
+          "financialMetrics": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/FinancialMetrics"
+            }
+          },
+          "activeProducts": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ClientProductDTO"
+            }
+          }
+        }
+      },
+      "ResponsibleEmployees": {
+        "type": "object",
+        "properties": {
+          "departmentAcquisition": {
+            "type": "string"
+          },
+          "departmentRetention": {
+            "type": "string"
+          },
+          "acquisitionManager": {
+            "type": "string"
+          },
+          "acquisitionSupervisor": {
+            "type": "string"
+          },
+          "acquisitionHead": {
+            "type": "string"
+          },
+          "retentionManager": {
+            "type": "string"
+          },
+          "retentionSupervisor": {
+            "type": "string"
+          },
+          "retentionHead": {
+            "type": "string"
+          }
+        }
+      },
+      "SecurityData": {
+        "type": "object",
+        "properties": {
+          "secretWord": {
+            "type": "string"
+          },
+          "password": {
+            "type": "string"
+          }
+        }
+      },
+      "ServiceOrProductDTO": {
+        "type": "object",
+        "properties": {
+          "product": {
+            "type": "string"
+          },
+          "startDate": {
+            "type": "string"
+          },
+          "endDate": {
+            "type": "string"
+          },
+          "quantity": {
+            "type": "integer",
+            "format": "int32"
+          }
+        }
+      },
+      "SpecialOfferDTO": {
+        "type": "object",
+        "properties": {
+          "offerId": {
+            "type": "string"
+          },
+          "offerType": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "currentPrice": {
+            "type": "number"
+          },
+          "oldPrice": {
+            "type": "number"
+          },
+          "expirationDate": {
+            "type": "string"
+          },
+          "isCompatible": {
+            "type": "boolean"
+          },
+          "reason": {
+            "type": "string"
+          }
+        }
+      },
+      "SubsidiaryDTO": {
+        "type": "object",
+        "properties": {
+          "companyName": {
+            "type": "string"
+          },
+          "city": {
+            "type": "string"
+          },
+          "segment": {
+            "type": "string"
+          },
+          "industry": {
+            "type": "string"
+          }
+        }
+      },
+      "TransactionDTO": {
+        "type": "object",
+        "properties": {
+          "number": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "operationDate": {
+            "type": "string"
+          },
+          "transactionNumber": {
+            "type": "string"
+          },
+          "amount": {
+            "type": "number"
+          },
+          "operationType": {
+            "type": "string"
+          },
+          "details": {
+            "type": "string"
+          }
+        }
+      },
+      "CreateB2CClientRequest": {
+        "type": "object",
+        "description": "Запрос на создание B2C клиента",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int64",
+            "description": "Идентификатор клиента (для обновления)",
+            "example": 1
+          },
+          "binIin": {
+            "type": "string",
+            "description": "ИИН клиента",
+            "example": 950101300456
+          },
+          "fullName": {
+            "type": "string",
+            "description": "Полное имя (ФИО)",
+            "example": "Алиев Арман"
+          },
+          "phone": {
+            "type": "string",
+            "description": "Контактный телефон",
+            "example": 77071234567
+          },
+          "residency": {
+            "type": "string",
+            "description": "Резидентство (RESIDENT, NON_RESIDENT)",
+            "example": "KAZ"
+          },
+          "registrationAddress": {
+            "type": "string",
+            "description": "Адрес регистрации"
+          },
+          "actualAddressSameAsRegistration": {
+            "type": "boolean",
+            "description": "Совпадает ли фактический адрес с адресом регистрации"
+          },
+          "actualAddress": {
+            "type": "string",
+            "description": "Фактический адрес проживания"
+          },
+          "secretWord": {
+            "type": "string",
+            "description": "Кодовое слово"
+          },
+          "language": {
+            "type": "string",
+            "description": "Язык обслуживания (KZ, RU, EN)",
+            "example": "RU"
+          },
+          "email": {
+            "type": "string",
+            "description": "Электронная почта",
+            "example": "example@kcell.kz"
+          },
+          "otpCode": {
+            "type": "string",
+            "description": "OTP код из SMS",
+            "example": 123456
+          },
+          "maritalStatus": {
+            "type": "string",
+            "description": "Семейное положение (выберите из списка)",
+            "enum": [
+              "SINGLE",
+              "MARRIED",
+              "DIVORCED"
+            ]
+          }
+        },
+        "required": [
+          "binIin"
+        ]
+      },
+      "CreateB2BClientRequest": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "binIin": {
+            "type": "string"
+          },
+          "companyName": {
+            "type": "string"
+          },
+          "companyPhone": {
+            "type": "string"
+          },
+          "companyEmail": {
+            "type": "string"
+          },
+          "legalAddress": {
+            "type": "string"
+          },
+          "actualAddressSameAsLegal": {
+            "type": "boolean"
+          },
+          "actualAddress": {
+            "type": "string"
+          },
+          "contactPersonFullName": {
+            "type": "string"
+          },
+          "contactPersonPosition": {
+            "type": "string"
+          },
+          "contactPersonPhone": {
+            "type": "string"
+          },
+          "otpCode": {
+            "type": "string"
+          },
+          "brandName": {
+            "type": "string"
+          }
+        }
+      },
+      "ContractDebtDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "crBal": {
+            "type": "number"
+          },
+          "crExpPd": {
+            "type": "number"
+          },
+          "crWrPd": {
+            "type": "number"
+          },
+          "crIntBal": {
+            "type": "number"
+          },
+          "crExInt": {
+            "type": "number"
+          },
+          "crExpIn": {
+            "type": "number"
+          },
+          "crPayPrcodBln": {
+            "type": "number"
+          },
+          "crOffPrcbln": {
+            "type": "number"
+          },
+          "crOffPrcodBln": {
+            "type": "number"
+          },
+          "crPrcnbl": {
+            "type": "number"
+          },
+          "crOvrPrcnbl": {
+            "type": "number"
+          },
+          "crPayPrcodNbl": {
+            "type": "number"
+          },
+          "crExppdPen": {
+            "type": "number"
+          },
+          "crExpiPen": {
+            "type": "number"
+          },
+          "crPenOthPay": {
+            "type": "number"
+          },
+          "crComPay": {
+            "type": "number"
+          },
+          "crExpCom": {
+            "type": "number"
+          },
+          "crPayAccrec": {
+            "type": "number"
+          },
+          "crOffAccrec": {
+            "type": "number"
+          },
+          "rl03Sd": {
+            "type": "number"
+          },
+          "rl08Sd": {
+            "type": "number"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "datePenEnd": {
+            "type": "string"
+          },
+          "dateDbtEnd": {
+            "type": "string"
+          },
+          "dateExpEnd": {
+            "type": "string"
+          },
+          "datePdEnd": {
+            "type": "string"
+          },
+          "datePrcEnd": {
+            "type": "string"
+          }
+        }
+      },
+      "ContractDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "contractNumber": {
+            "type": "string"
+          },
+          "currency": {
+            "type": "string"
+          },
+          "borrowerName": {
+            "type": "string"
+          },
+          "creditTermMonths": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "issueDate": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "repaymentDate": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "delayDays": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "principalDebt": {
+            "type": "number"
+          },
+          "interestDebt": {
+            "type": "number"
+          },
+          "interestRate": {
+            "type": "number"
+          },
+          "creditAmount": {
+            "type": "number"
+          },
+          "businessType": {
+            "type": "string"
+          },
+          "binIin": {
+            "type": "string"
+          },
+          "creditProductName": {
+            "type": "string"
+          },
+          "restructuringDate": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "ifrsPortfolioType": {
+            "type": "string"
+          },
+          "ifrsProvisionPercentage": {
+            "type": "number"
+          },
+          "ifrsProvisionPrincipal": {
+            "type": "number"
+          },
+          "ifrsProvisionInterest": {
+            "type": "number"
+          },
+          "contractStatus": {
+            "type": "string"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "markId": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "mark": {
+            "type": "string"
+          },
+          "contractEndDate": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "overdueDaysPrincipal": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "creditPurpose": {
+            "type": "string"
+          },
+          "overduePrincipalDebt": {
+            "type": "number"
+          },
+          "overdueInterestDebt": {
+            "type": "number"
+          },
+          "overdueDebt": {
+            "type": "number"
+          },
+          "penaltyAmount": {
+            "type": "number"
+          },
+          "fineAmount": {
+            "type": "number"
+          },
+          "plannedRepaymentDate": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "collectionStatus": {
+            "type": "string"
+          },
+          "depId": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "srvDepCode": {
+            "type": "string"
+          },
+          "projectManager": {
+            "type": "string"
+          },
+          "contractState": {
+            "type": "string"
+          },
+          "contractUpdateAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "contractDebtDto": {
+            "$ref": "#/components/schemas/ContractDebtDto"
+          },
+          "subsidyStartDate": {
+            "type": "string"
+          },
+          "subsidyEndDate": {
+            "type": "string"
+          },
+          "subsidyContractNumber": {
+            "type": "string"
+          },
+          "subsidyDate": {
+            "type": "string"
+          },
+          "srvDepName": {
+            "type": "string"
+          }
+        }
+      },
+      "PageResponseContractDto": {
+        "type": "object",
+        "properties": {
+          "content": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ContractDto"
+            }
+          },
+          "totalElements": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "totalPages": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "page": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "lastPage": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "size": {
+            "type": "integer",
+            "format": "int32"
+          }
+        }
+      },
+      "ClientInfoFilter": {
+        "type": "object",
+        "properties": {
+          "fio": {
+            "type": "string"
+          },
+          "iin": {
+            "type": "string"
+          },
+          "contractNumber": {
+            "type": "string"
+          },
+          "totalDebtAmountFrom": {
+            "type": "number"
+          },
+          "totalDebtAmountTo": {
+            "type": "number"
+          },
+          "overdueDaysPrincipal": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "overdueDaysInterest": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "depId": {
+            "type": "array",
+            "items": {
+              "type": "integer",
+              "format": "int64"
+            }
+          },
+          "srvDepCodes": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "collection": {
+            "type": "string"
+          },
+          "username": {
+            "type": "string"
+          },
+          "appointedManager": {
+            "type": "string"
+          },
+          "resultOfProcessing": {
+            "type": "string"
+          },
+          "dateOfProcessing": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "campaignTaskStatus": {
+            "type": "string"
+          },
+          "status": {
+            "type": "string"
+          }
+        }
+      },
+      "CallResultDto": {
+        "type": "object",
+        "properties": {
+          "contactId": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "contactType": {
+            "type": "string"
+          },
+          "reasonDelay": {
+            "type": "string"
+          },
+          "result": {
+            "type": "string"
+          },
+          "promiseDate": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "comment": {
+            "type": "string"
+          },
+          "createDate": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "contract": {
+            "type": "string"
+          },
+          "language": {
+            "type": "string"
+          },
+          "startedAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "endedAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "duration": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "phoneNumber": {
+            "type": "string"
+          },
+          "responsible": {
+            "type": "string"
+          },
+          "outcome": {
+            "type": "string"
+          }
+        }
+      },
+      "ClientContactDto": {
+        "type": "object",
+        "properties": {
+          "phoneNumber": {
+            "type": "string"
+          },
+          "isNewMessage": {
+            "type": "boolean"
+          },
+          "name": {
+            "type": "string"
+          },
+          "lastDate": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "type": {
+            "type": "string",
+            "enum": [
+              "MOBILE",
+              "WORK",
+              "HOME",
+              "EMAIL"
+            ]
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "ACTIVE",
+              "PAUSE",
+              "REMOVED"
+            ]
+          },
+          "verified": {
+            "type": "boolean"
+          },
+          "relationShip": {
+            "type": "string"
+          },
+          "actions": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "boolean"
+            }
+          },
+          "id": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "contactType": {
+            "type": "string"
+          },
+          "contactValue": {
+            "type": "string"
+          },
+          "isPrimary": {
+            "type": "boolean"
+          },
+          "preferredChannel": {
+            "type": "boolean"
+          },
+          "priority": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "contactStatus": {
+            "type": "string"
+          },
+          "verificationStatus": {
+            "type": "string"
+          },
+          "verificationDate": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "convenientTime": {
+            "type": "string"
+          },
+          "processingConsent": {
+            "type": "boolean"
+          },
+          "marketingConsent": {
+            "type": "boolean"
+          },
+          "contactPersonName": {
+            "type": "string"
+          },
+          "isActual": {
+            "type": "boolean"
+          }
+        }
+      },
+      "ClientInfo": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "fio": {
+            "type": "string"
+          },
+          "firstName": {
+            "type": "string"
+          },
+          "middleName": {
+            "type": "string"
+          },
+          "lastName": {
+            "type": "string"
+          },
+          "iin": {
+            "type": "string"
+          },
+          "contractNumber": {
+            "type": "string"
+          },
+          "email": {
+            "type": "string"
+          },
+          "overdueDay": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "debt": {
+            "type": "number"
+          },
+          "company": {
+            "type": "string"
+          },
+          "contractDay": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "residenceAddress": {
+            "type": "string"
+          },
+          "registerAddress": {
+            "type": "string"
+          },
+          "contacts": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ClientContactDto"
+            }
+          },
+          "status": {
+            "type": "string"
+          },
+          "daysAfterOverdue": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "isRead": {
+            "type": "boolean"
+          },
+          "isReadDate": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "result": {
+            "type": "string"
+          },
+          "priority": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "totalDebtAmount": {
+            "type": "number"
+          },
+          "dateCloseTask": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "odpz": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "communicationResultDtos": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/CommunicationResultDto"
+            }
+          },
+          "callResultDtos": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/CallResultDto"
+            }
+          },
+          "promiseDate": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "birthDate": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "placeOfBirth": {
+            "type": "string"
+          },
+          "gender": {
+            "type": "string"
+          },
+          "identityDocumentNumber": {
+            "type": "string"
+          },
+          "identityIssueDate": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "identityIssuedBy": {
+            "type": "string"
+          },
+          "phoneNumber": {
+            "type": "string"
+          },
+          "clientType": {
+            "type": "string"
+          },
+          "registrationDate": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "productName": {
+            "type": "string"
+          },
+          "businessType": {
+            "type": "string"
+          },
+          "issueDate": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "overduePrincipalDebt": {
+            "type": "number"
+          },
+          "penaltyAmount": {
+            "type": "number"
+          },
+          "repaymentDate": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "lastActionDate": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "stageOfTask": {
+            "type": "string"
+          },
+          "appointedManager": {
+            "type": "string"
+          },
+          "lastWorkDay": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "taskId": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "collectionStrategy": {
+            "type": "string"
+          },
+          "depId": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "taskNumber": {
+            "type": "string"
+          },
+          "taskSeq": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "processingResult": {
+            "type": "string"
+          },
+          "nextProcessingDate": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "isWorked": {
+            "type": "boolean"
+          },
+          "taskCreatedAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "campaignTaskAim": {
+            "type": "string"
+          },
+          "taskCompletionDate": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "srvDepCode": {
+            "type": "string"
+          },
+          "srvDepName": {
+            "type": "string"
+          },
+          "aim": {
+            "type": "string"
+          },
+          "comment": {
+            "type": "string"
+          },
+          "autoClosed": {
+            "type": "boolean"
+          },
+          "contractDebtDto": {
+            "$ref": "#/components/schemas/ContractDebtDto"
+          },
+          "processing_status": {
+            "type": "string"
+          },
+          "forecast_level_of_overdue": {
+            "type": "number"
+          }
+        }
+      },
+      "CommunicationResultDto": {
+        "type": "object",
+        "properties": {
+          "contactId": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "startDate": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "endDate": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "direction": {
+            "type": "string"
+          },
+          "channel": {
+            "type": "string"
+          },
+          "result": {
+            "type": "string"
+          },
+          "createDate": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "responsible": {
+            "type": "string"
+          },
+          "comment": {
+            "type": "string"
+          },
+          "promiseDate": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      },
+      "PageResponseClientInfo": {
+        "type": "object",
+        "properties": {
+          "content": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ClientInfo"
+            }
+          },
+          "totalElements": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "totalPages": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "page": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "lastPage": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "size": {
+            "type": "integer",
+            "format": "int32"
+          }
+        }
+      },
+      "CampaignClientInfoDto": {
+        "type": "object",
+        "description": "Информация о клиенте для списка в campaign management",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int64",
+            "description": "ID клиента",
+            "example": 1024
+          },
+          "type": {
+            "type": "string",
+            "description": "Тип клиента",
+            "example": "B2B"
+          },
+          "clientName": {
+            "type": "string",
+            "description": "ФИО Клиента или Наименование Компании",
+            "example": "Таиров Эрик"
+          },
+          "binIin": {
+            "type": "string",
+            "description": "БИН или ИИН",
+            "example": 890621255771
+          },
+          "phoneNumbers": {
+            "type": "array",
+            "description": "Сотовые номера, которые принадлежат клиенту",
+            "example": [
+              "77015554433",
+              "77071112233"
+            ],
+            "items": {
+              "type": "string"
+            }
+          },
+          "region": {
+            "type": "string",
+            "description": "Регион клиента",
+            "example": "Алматы"
+          },
+          "manager": {
+            "type": "string",
+            "description": "Имя менеджера данного клиента (только для B2B)",
+            "example": "Иванов Иван"
+          },
+          "isDeleted": {
+            "type": "boolean",
+            "description": "Признак того, что клиент удален (Soft Delete). Поле возвращается только для ROLE_ADMIN. Если клиент активен — false, если в архиве — true.",
+            "example": true
+          }
+        }
+      },
+      "PageCampaignClientInfoDto": {
+        "type": "object",
+        "properties": {
+          "totalPages": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "totalElements": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "first": {
+            "type": "boolean"
+          },
+          "last": {
+            "type": "boolean"
+          },
+          "pageable": {
+            "$ref": "#/components/schemas/Pageablenull"
+          },
+          "numberOfElements": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "size": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "content": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/CampaignClientInfoDto"
+            }
+          },
+          "number": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "sort": {
+            "$ref": "#/components/schemas/Sortnull"
+          },
+          "empty": {
+            "type": "boolean"
+          }
+        }
+      },
+      "Pageablenull": {
+        "type": "object",
+        "properties": {
+          "unpaged": {
+            "type": "boolean"
+          },
+          "paged": {
+            "type": "boolean"
+          },
+          "pageNumber": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "pageSize": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "offset": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "sort": {
+            "$ref": "#/components/schemas/Sortnull"
+          }
+        }
+      },
+      "Sortnull": {
+        "type": "object",
+        "properties": {
+          "unsorted": {
+            "type": "boolean"
+          },
+          "sorted": {
+            "type": "boolean"
+          },
+          "empty": {
+            "type": "boolean"
+          }
+        }
+      },
+      "ExecuteResult": {
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "message": {
+            "type": "string"
+          }
+        }
+      },
+      "GetClientsRs": {
+        "type": "object",
+        "properties": {
+          "result": {
+            "$ref": "#/components/schemas/ExecuteResult"
+          },
+          "data": {
+            "$ref": "#/components/schemas/ClientContactDto"
+          },
+          "clients": {
+            "$ref": "#/components/schemas/PageClientInfo"
+          }
+        }
+      },
+      "PageClientInfo": {
+        "type": "object",
+        "properties": {
+          "totalPages": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "totalElements": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "first": {
+            "type": "boolean"
+          },
+          "last": {
+            "type": "boolean"
+          },
+          "pageable": {
+            "$ref": "#/components/schemas/Pageablenull"
+          },
+          "numberOfElements": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "size": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "content": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ClientInfo"
+            }
+          },
+          "number": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "sort": {
+            "$ref": "#/components/schemas/Sortnull"
+          },
+          "empty": {
+            "type": "boolean"
+          }
+        }
+      },
+      "ContractDocumentFilter": {
+        "type": "object",
+        "properties": {
+          "contractNumber": {
+            "type": "string"
+          }
+        }
+      },
+      "ContractDocumentDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "type": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "responsible": {
+            "type": "string"
+          },
+          "documentId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "mimeType": {
+            "type": "string"
+          },
+          "contractId": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "contractNumber": {
+            "type": "string"
+          },
+          "uploadedAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "comment": {
+            "type": "string"
+          }
+        }
+      },
+      "CommunicateResultFilter": {
+        "type": "object",
+        "properties": {
+          "taskNumber": {
+            "type": "string"
+          }
+        }
+      },
+      "CommunicateResultDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "messageType": {
+            "type": "string"
+          },
+          "subject": {
+            "type": "string"
+          },
+          "contactValue": {
+            "type": "string"
+          },
+          "receiverFio": {
+            "type": "string"
+          },
+          "status": {
+            "type": "string"
+          },
+          "deliveredAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "createdBy": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "updatedBy": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "clientId": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "contactId": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "userId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "taskNumber": {
+            "type": "string"
+          },
+          "contractId": {
+            "type": "integer",
+            "format": "int64"
+          }
+        }
+      },
+      "MarkDto": {
+        "type": "object",
+        "properties": {
+          "mark": {
+            "type": "string"
+          },
+          "childrenMark": {
+            "type": "string"
+          }
+        }
+      },
+      "CreateActivityRequest": {
+        "type": "object",
+        "properties": {
+          "clientId": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "activityType": {
+            "type": "string"
+          },
+          "subject": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "source": {
+            "type": "string"
+          },
+          "sourceId": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "createdByName": {
+            "type": "string"
+          }
+        }
+      },
+      "CreateActivityBatchRequest": {
+        "type": "object",
+        "properties": {
+          "activities": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/CreateActivityRequest"
+            }
+          }
+        }
+      },
+      "AnalyticBlock": {
+        "type": "object",
+        "properties": {
+          "title": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "value": {
+            "type": "string"
+          }
+        }
+      },
+      "ManagerReport": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "result": {
+            "type": "string"
+          },
+          "clientId": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "userName": {
+            "type": "string"
+          },
+          "createDate": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      },
+      "Mark": {
+        "type": "object",
+        "properties": {
+          "createdBy": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "updatedBy": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "deletedAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "id": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "name": {
+            "type": "string"
+          },
+          "code": {
+            "type": "string"
+          },
+          "type": {
+            "type": "string"
+          },
+          "children": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Mark"
+            }
+          },
+          "isClientContractMark": {
+            "type": "boolean"
+          }
+        }
+      },
+      "ManagerUserDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "fullName": {
+            "type": "string"
+          }
+        }
+      },
+      "PreDeleteCheckResponse": {
+        "type": "object",
+        "description": "Результат проверки клиента перед удалением",
+        "properties": {
+          "canDeleteSafely": {
+            "type": "boolean",
+            "description": "Можно ли удалить без предупреждений"
+          },
+          "warnings": {
+            "type": "array",
+            "description": "Список причин/блокировок",
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "KcellClientInfoDto": {
+        "type": "object",
+        "description": "Информация о клиенте для списка",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "type": {
+            "type": "string",
+            "description": "Тип клиента",
+            "example": "B2B"
+          },
+          "clientName": {
+            "type": "string",
+            "description": "ФИО Клиента или Наименование Компании",
+            "example": "Таиров Эрик"
+          },
+          "binIin": {
+            "type": "string",
+            "description": "БИН или ИИН",
+            "example": 890621255771
+          },
+          "contracts": {
+            "type": "array",
+            "description": "Номера контарктов которые пренадлежат клиенту",
+            "items": {
+              "type": "string"
+            }
+          },
+          "msisdn": {
+            "type": "array",
+            "description": "Сотовые номера которые пренадлежат клиенту",
+            "items": {
+              "type": "string"
+            }
+          },
+          "status": {
+            "type": "string",
+            "description": "Статус клиента"
+          },
+          "region": {
+            "type": "string",
+            "description": "Регион клиента",
+            "example": "Алматы"
+          },
+          "manager": {
+            "type": "string",
+            "description": "Имя мэнеджера данного клиента"
+          }
+        }
+      },
+      "PageResponseKcellClientInfoDto": {
+        "type": "object",
+        "properties": {
+          "content": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/KcellClientInfoDto"
+            }
+          },
+          "totalElements": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "totalPages": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "page": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "lastPage": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "size": {
+            "type": "integer",
+            "format": "int32"
+          }
+        }
+      },
+      "TemplateKeyDto": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "value": {
+
+          },
+          "description": {
+            "type": "string"
+          }
+        }
+      },
+      "CollectionListDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "clientId": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "legalCollectionId": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "iin": {
+            "type": "string"
+          },
+          "fio": {
+            "type": "string"
+          },
+          "contractNumber": {
+            "type": "string"
+          },
+          "overdueDay": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "contractDay": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "overdueAmount": {
+            "type": "number"
+          },
+          "lastContactDate": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "status": {
+            "type": "string"
+          },
+          "businessType": {
+            "type": "string"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "contractDate": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "depId": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "srvDepCode": {
+            "type": "string"
+          },
+          "srvDepName": {
+            "type": "string"
+          },
+          "contractUpdateAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "contractDebtDto": {
+            "$ref": "#/components/schemas/ContractDebtDto"
+          },
+          "managerId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "manager": {
+            "$ref": "#/components/schemas/UserDto"
+          },
+          "collectionStrategy": {
+            "type": "string"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "creditProductName": {
+            "type": "string"
+          }
+        }
+      },
+      "ContactDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "contactPersonName": {
+            "type": "string"
+          },
+          "contactType": {
+            "type": "string"
+          },
+          "contactValue": {
+            "type": "string"
+          },
+          "isPrimary": {
+            "type": "boolean"
+          },
+          "priority": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "contactStatus": {
+            "type": "string"
+          },
+          "relationship": {
+            "type": "string"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "verified": {
+            "type": "boolean"
+          },
+          "isActual": {
+            "type": "boolean"
+          }
+        }
+      },
+      "DocHistory": {
+        "type": "object"
+      },
+      "IdentityDocumentDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "issueDate": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "documentName": {
+            "type": "string"
+          },
+          "documentType": {
+            "type": "string"
+          }
+        }
+      },
+      "ManagerDto": {
+        "type": "object",
+        "properties": {
+          "result": {
+            "type": "string"
+          },
+          "userName": {
+            "type": "string"
+          },
+          "createDate": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "fio": {
+            "type": "string"
+          },
+          "nextProcessingDate": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "promiseDate": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "companyName": {
+            "type": "string"
+          }
+        }
+      },
+      "OrganizationalUnitDTO": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "parentId": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "code": {
+            "type": "string"
+          },
+          "longName": {
+            "type": "string"
+          },
+          "level": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "deletedAt": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      },
+      "PaymentHistoryDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "paymentDate": {
+            "type": "string",
+            "format": "date"
+          },
+          "contractNumber": {
+            "type": "string"
+          },
+          "paymentAmount": {
+            "type": "number"
+          },
+          "repaymentMethod": {
+            "type": "string"
+          }
+        }
+      },
+      "ProcessingResultDto": {
+        "type": "object",
+        "properties": {
+          "processingDate": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "processingResult": {
+            "type": "string"
+          },
+          "nextProcessingDate": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "promiseDate": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "responsible": {
+            "type": "string"
+          },
+          "comment": {
+            "type": "string"
+          },
+          "processingComment": {
+            "type": "string"
+          }
+        }
+      },
+      "RoleDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "name": {
+            "type": "string"
+          },
+          "code": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          }
+        }
+      },
+      "SegmentClientDto": {
+        "type": "object",
+        "properties": {
+          "clientId": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "fio": {
+            "type": "string"
+          },
+          "iinBin": {
+            "type": "string"
+          },
+          "email": {
+            "type": "string"
+          },
+          "phone": {
+            "type": "string"
+          },
+          "depId": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "srvDepCode": {
+            "type": "string"
+          },
+          "workingPlace": {
+            "type": "string"
+          },
+          "position": {
+            "type": "string"
+          },
+          "salary": {
+            "type": "number"
+          },
+          "additionalIncome": {
+            "type": "number"
+          },
+          "maritalStatus": {
+            "type": "string"
+          },
+          "contracts": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ContractDto"
+            }
+          },
+          "contacts": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ContactDto"
+            }
+          },
+          "callResults": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/CallResultDto"
+            }
+          },
+          "communicationResults": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/CommunicationResultDto"
+            }
+          },
+          "managers": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ManagerDto"
+            }
+          },
+          "addresses": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/AddressDto"
+            }
+          },
+          "paymentHistory": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/PaymentHistoryDto"
+            }
+          },
+          "docs": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/DocHistory"
+            }
+          },
+          "identityDocuments": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/IdentityDocumentDto"
+            }
+          },
+          "processingResults": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ProcessingResultDto"
+            }
+          },
+          "creditProductName": {
+            "type": "string"
+          },
+          "contractNumber": {
+            "type": "string"
+          },
+          "creditPurpose": {
+            "type": "string"
+          },
+          "issueDate": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "creditAmount": {
+            "type": "number"
+          },
+          "plannedRepaymentDate": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "contractEndDate": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "overdueDaysPrincipal": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "overdueDebt": {
+            "type": "number"
+          },
+          "overduePrincipalDebt": {
+            "type": "number"
+          },
+          "overdueInterestDebt": {
+            "type": "number"
+          },
+          "penaltyAmount": {
+            "type": "number"
+          },
+          "fineAmount": {
+            "type": "number"
+          },
+          "markId": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "mark": {
+            "type": "string"
+          },
+          "parentMark": {
+            "type": "string"
+          },
+          "taskNumber": {
+            "type": "string"
+          },
+          "taskId": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "autoClosed": {
+            "type": "boolean"
+          },
+          "contractMarks": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ClientMarkDto"
+            }
+          },
+          "contractDocuments": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ContractDocumentDto"
+            }
+          },
+          "projectManager": {
+            "type": "string"
+          },
+          "contractState": {
+            "type": "string"
+          },
+          "aim": {
+            "type": "string"
+          },
+          "contractDebtDto": {
+            "$ref": "#/components/schemas/ContractDebtDto"
+          },
+          "commentTask": {
+            "type": "string"
+          },
+          "commentProcessingResult": {
+            "type": "string"
+          },
+          "collection": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/CollectionListDto"
+            }
+          }
+        }
+      },
+      "UserDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "username": {
+            "type": "string"
+          },
+          "fio": {
+            "type": "string"
+          },
+          "keycloakId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "role": {
+            "$ref": "#/components/schemas/RoleDto"
+          },
+          "organizationId": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "email": {
+            "type": "string"
+          },
+          "srvDepCode": {
+            "type": "string"
+          },
+          "srvDepId": {
+            "type": "string"
+          },
+          "organizationalUnits": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/OrganizationalUnitDTO"
+            }
+          }
+        }
+      },
+      "GetContactByIdRs": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "phoneNumber": {
+            "type": "string"
+          },
+          "type": {
+            "type": "string",
+            "enum": [
+              "MOBILE",
+              "WORK",
+              "HOME",
+              "EMAIL"
+            ]
+          },
+          "verified": {
+            "type": "boolean"
+          },
+          "relationShip": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "isActual": {
+            "type": "boolean"
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "ACTIVE",
+              "PAUSE",
+              "REMOVED"
+            ]
+          }
+        }
+      },
+      "UploadHistory": {
+        "type": "object",
+        "properties": {
+          "createdBy": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "updatedBy": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "deletedAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "id": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "fileName": {
+            "type": "string"
+          }
+        }
+      },
+      "ActivityReportDto": {
+        "type": "object",
+        "properties": {
+          "activityId": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "clientId": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "clientName": {
+            "type": "string"
+          },
+          "activityType": {
+            "type": "string"
+          },
+          "subject": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "source": {
+            "type": "string"
+          },
+          "sourceId": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "createdBy": {
+            "type": "string"
+          }
+        }
+      },
+      "PageActivityReportDto": {
+        "type": "object",
+        "properties": {
+          "totalPages": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "totalElements": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "first": {
+            "type": "boolean"
+          },
+          "last": {
+            "type": "boolean"
+          },
+          "pageable": {
+            "$ref": "#/components/schemas/Pageablenull"
+          },
+          "numberOfElements": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "size": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "content": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ActivityReportDto"
+            }
+          },
+          "number": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "sort": {
+            "$ref": "#/components/schemas/Sortnull"
+          },
+          "empty": {
+            "type": "boolean"
+          }
+        }
+      }
+    },
+    "securitySchemes": {
+      "bearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
+      }
+    }
+  }
+}
