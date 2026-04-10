@@ -1,0 +1,28 @@
+@startuml
+!theme plain
+skinparam responseMessageBelowArrow true
+
+participant "client-service" as Svc
+database "PostgreSQL\n(Outbox Table)" as DB
+queue "Kafka Topic:\nlead.scoring.cmd" as KCmd
+participant "scoring-gateway" as SGW
+participant "ESB (Avalon)" as ESB
+queue "Kafka Topic:\nlead.scoring.res" as KRes
+
+Svc -> DB: UPDATE lead STATUS 'SCORING_PENDING'\nINSERT INTO outbox_events
+DB --> Svc: Transaction Commit
+
+Svc -> KCmd: Send ScoringRequestEvent
+KCmd -> SGW: Consume Request
+
+alt Circuit Breaker: CLOSED
+    SGW -> ESB: HTTP POST /score (Idempotency-Key)
+    ESB --> SGW: 200 OK (Score Result)
+    SGW -> KRes: Send ScoringResultEvent (SUCCESS)
+else ESB Timeout / Error
+    SGW -> KRes: Send ScoringResultEvent (FAILED/RETRY)
+end
+
+KRes -> Svc: Consume Result
+Svc -> DB: UPDATE leads_b2b \nSET external_score = ?, \nstatus_id = ?
+@enduml

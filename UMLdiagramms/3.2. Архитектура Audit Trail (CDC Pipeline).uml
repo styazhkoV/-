@@ -1,0 +1,24 @@
+@startuml
+!theme plain
+skinparam responseMessageBelowArrow true
+
+actor "Manager" as Mgr
+participant "client-service" as Svc
+database "PostgreSQL\n(db_client)" as DB
+participant "Debezium\n(Kafka Connect)" as CDC
+queue "Kafka Topic:\naudit.client.b2b" as Kafka
+participant "audit-service" as AuditDB
+
+Mgr -> Svc: PATCH /change-requests/88/approve
+Svc -> DB: UPDATE b2b_representatives SET position_id = 12
+DB --> Svc: Commit
+
+note right of DB: Write-Ahead Log (WAL) updated
+
+DB -> CDC: Logical Decoding Stream (pgoutput)
+CDC -> CDC: Format to JSON (Before/After state)
+CDC -> Kafka: Publish Audit Event
+
+Kafka <- AuditDB: Consume
+AuditDB -> AuditDB: Store in Cold Storage (ClickHouse/Elasticsearch)
+@enduml

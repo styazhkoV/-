@@ -1,0 +1,41 @@
+@startuml
+!theme plain
+skinparam responseMessageBelowArrow true
+
+actor "KAE (Manager)" as Mgr
+actor "Supervisor" as Sup
+participant "React UI" as UI
+participant "API Gateway" as GW
+participant "client-service" as Svc
+database "PostgreSQL\n(schema: client)" as DB
+
+Mgr -> UI: Изменить ЛПР (SA/LA)
+UI -> GW: POST /api/v1/leads/b2b/{id}/change-requests
+GW -> Svc: Route request
+
+Svc -> DB: SELECT count(*) WHERE lead_id = ? AND status = 'PENDING'
+alt count > 0
+    Svc --> UI: 409 Conflict (Уже есть активная заявка)
+else count == 0
+    Svc -> Svc: Сериализация DTO в JSONB
+    Svc -> DB: INSERT INTO change_requests
+    DB --> Svc: OK (id)
+    Svc --> UI: 201 Created
+end
+
+Sup -> UI: Открыть заявку
+UI -> GW: GET /api/v1/change-requests/{id}
+GW -> Svc: Route
+Svc --> UI: 200 OK (Возврат oldValues и payload)
+
+Sup -> UI: Нажать "Одобрить"
+UI -> GW: PATCH /api/v1/change-requests/{id}/approve
+GW -> Svc: Route
+
+note over Svc, DB: @Transactional(isolation = REPEATABLE_READ)
+Svc -> DB: UPDATE leads_b2b SET lpr_name = ...
+Svc -> DB: UPDATE/INSERT client_contacts ...
+Svc -> DB: UPDATE change_requests SET status = 'APPROVED'
+DB --> Svc: Commit
+Svc --> UI: 200 OK
+@enduml

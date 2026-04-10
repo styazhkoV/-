@@ -1,0 +1,74 @@
+@startuml
+!theme plain
+skinparam Linetype ortho
+
+package "Client Schema (Unified Party Model)" {
+    
+    entity "client.clients" as base {
+        * id : bigint <<PK>>
+        --
+        client_type : varchar(10) // 'B2B' or 'B2C'
+        created_at : timestamp
+    }
+
+    entity "client.client_contacts" as contacts {
+        * id : bigint <<PK>>
+        --
+        client_id : bigint <<FK>> // Refers to base.id
+        contact_type_id : bigint
+        value : varchar
+    }
+
+    entity "client.clients_b2c" as b2c {
+        * id : bigint <<PK>>
+        --
+        client_id : bigint <<FK>> // Refers to base.id
+        first_name : varchar
+        last_name : varchar
+    }
+
+    entity "client.clients_b2b" as b2b {
+        * id : bigint <<PK>>
+        --
+        client_id : bigint <<FK>> // Refers to base.id
+        company_name : varchar
+        bin_iin : varchar
+    }
+
+    entity "client.b2b_representatives" as reps {
+        * id : bigint <<PK>>
+        --
+        b2b_client_id : bigint <<FK>> // Refers to b2b.id
+        b2c_client_id : bigint <<FK>> // Refers to b2c.id
+        position_id : bigint
+        is_signatory : boolean
+        is_active : boolean
+    }
+
+    entity "client.leads_b2b" as leads {
+        * id : bigint <<PK>>
+        --
+        lead_number : varchar
+        client_b2b_id : bigint <<FK>>
+        status_id : bigint
+    }
+
+    entity "client.lead_participants" as parts {
+        * id : bigint <<PK>>
+        --
+        lead_id : bigint <<FK>>
+        representative_id : bigint <<FK>> // Refers to reps.id
+        role_id : bigint // e.g., LPR, Tech
+    }
+}
+
+base ||--|| b2c
+base ||--|| b2b
+base ||--o{ contacts
+
+b2b ||--o{ reps
+b2c ||--o{ reps
+
+leads ||--o{ parts
+reps ||--o{ parts
+@enduml

@@ -1,0 +1,91 @@
+@startuml
+!theme plain
+skinparam Linetype ortho
+
+package "Core Client Schema" {
+    entity "client.clients" as base {
+        * id : bigint <<PK>>
+        --
+        client_type : varchar // 'B2B' or 'B2C'
+        created_at : timestamp
+    }
+
+    entity "client.client_contacts" as contacts {
+        * id : bigint <<PK>>
+        --
+        client_id : bigint <<FK>> // Ref to base.id
+        contact_type_id : bigint
+        value : varchar
+        is_main : boolean
+    }
+
+    entity "client.clients_b2b" as b2b {
+        * id : bigint <<PK>>
+        --
+        client_id : bigint <<FK>> // Ref to base.id
+        company_name : varchar
+        bin_iin : varchar <<Unique>>
+        category_id : bigint // SME, SA, LA
+    }
+
+    entity "client.clients_b2c" as b2c {
+        * id : bigint <<PK>>
+        --
+        client_id : bigint <<FK>> // Ref to base.id
+        first_name : varchar
+        last_name : varchar
+    }
+}
+
+package "Lead & Workflow Schema" {
+    entity "client.leads_b2b" as leads {
+        * id : bigint <<PK>>
+        --
+        lead_number : varchar <<Unique>>
+        client_b2b_id : bigint <<FK>>
+        status_id : bigint
+        acq_employee_id : bigint
+        total_amount : numeric(38,2)
+        is_overdue : boolean
+        assigned_at : timestamp
+    }
+
+    entity "client.b2b_representatives" as reps {
+        * id : bigint <<PK>>
+        --
+        b2b_client_id : bigint <<FK>>
+        b2c_client_id : bigint <<FK>>
+        position_id : bigint
+    }
+
+    entity "client.lead_participants" as parts {
+        * id : bigint <<PK>>
+        --
+        lead_id : bigint <<FK>>
+        representative_id : bigint <<FK>>
+        role_id : bigint // LPR, Signatory
+    }
+
+    entity "client.change_requests" as cr {
+        * id : bigint <<PK>>
+        --
+        lead_id : bigint <<FK>>
+        new_value : jsonb
+        status : varchar // PENDING, APPROVED
+    }
+}
+
+' Relations
+base ||--|| b2b
+base ||--|| b2c
+base ||--o{ contacts
+
+b2b ||--o{ leads
+b2b ||--o{ reps
+b2c ||--o{ reps
+
+leads ||--o{ parts
+reps ||--o{ parts
+leads ||--o{ cr
+
+@enduml
